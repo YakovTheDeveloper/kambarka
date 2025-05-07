@@ -1,0 +1,50 @@
+@use 'typography';
+@import './base.css';
+
+#app {
+  width: 3840px;
+  height: 2160px;
+
+  > * {
+    height: 100%;
+  }
+}
+
+.jcsb {
+  justify-content: space-between;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.radius {
+  border-radius: 60px;
+}
+
+.bg-alpha {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.flex {
+  flex-grow: 1;
+}
+
+.container-padding {
+  padding: 80px;
+}
+
+.container-bg {
+  background: url('/images/home/bg.png') center/cover no-repeat;
+}
+
+.round {
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
