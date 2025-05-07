@@ -4,6 +4,8 @@ import GamesView from '@/views/games-view/GamesView.vue'
 import SightsView from '@/views/sights-view/SightsView.vue'
 import AnimalView from '@/views/animal-view/AnimalView.vue'
 import TrashGameView from '@/views/games-view/trash-game-view/TrashGameView.vue'
+import TrashGameDifficulty from '@/views/games-view/trash-game-view/TrashGameDifficulty.vue'
+import TrashGameFinish from '@/views/games-view/trash-game-view/TrashGameFinish.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,9 +21,19 @@ const router = createRouter({
       component: GamesView,
     },
     {
+      path: '/games/trash-difficulty',
+      name: 'games/trash-difficulty',
+      component: TrashGameDifficulty,
+    },
+    {
       path: '/games/trash',
       name: 'games/trash',
       component: TrashGameView,
+    },
+    {
+      path: '/games/trash/finish',
+      name: 'games/trash/finish',
+      component: TrashGameFinish,
     },
     {
       path: '/sights',

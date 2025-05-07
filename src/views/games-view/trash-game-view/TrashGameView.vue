@@ -1,11 +1,19 @@
 <template>
-  <div class="container-bg-blur container-padding" ref="containerRef">
+  <div
+    class="container-bg-blur container-padding"
+    ref="containerRef"
+    :style="{ overflow: 'hidden' }"
+  >
     <div class="trash-container">
       <img
-        v-for="(item, index) in currentItems"
+        v-for="(item, index) in store.currentItems.value"
         :key="index"
         :src="item.src"
-        :style="{ top: item.y + 'px', left: item.x + 'px', position: 'absolute', zIndex: 2 }"
+        :style="{
+          transform: 'translate(' + item.x + 'px, ' + item.y + 'px)',
+          position: 'absolute',
+          zIndex: 2,
+        }"
         class="trash-item"
         @touchstart.prevent="startDrag(index, $event)"
         @touchmove.prevent="onDrag($event)"
@@ -14,7 +22,12 @@
         @mousemove.prevent="onDrag($event)"
         @mouseup.prevent="endDrag"
       />
-      <TrashGameBin v-for="bin in currentBins" :bin="bin" :binsToOpen="binsToOpen" />
+      <TrashGameBin
+        v-for="bin in store.currentBins.value"
+        :bin="bin"
+        :binsToOpen="binsToOpen"
+        :currentItems="store.currentItems.value"
+      />
     </div>
   </div>
 </template>
@@ -22,47 +35,17 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watchEffect } from 'vue'
 import TrashGameBin from './TrashGameBin.vue'
+import { levelToBins, levelToItems } from './config'
+import { useGameState } from './state'
 
 const containerRef = ref<HTMLElement | null>(null)
-const currentLevel = ref(1)
+const store = useGameState()
+
 const BIN_WIDTH = 608
 const BIN_HEIGHT = 1086
 
-const levelToItems: Record<number, { src: string; x: number; y: number; type: string }[]> = {
-  1: [
-    { src: '/images/games/trash/plastic7.png', x: 0, y: 0, type: 'plastic' },
-    { src: '/images/games/trash/plastic5.png', x: 50, y: 0, type: 'plastic' },
-    { src: '/images/games/trash/plastic4.png', x: 100, y: 0, type: 'plastic' },
-    { src: '/images/games/trash/paper6.png', x: 150, y: 0, type: 'paper' },
-    { src: '/images/games/trash/plastic3.png', x: 200, y: 0, type: 'plastic' },
-    { src: '/images/games/trash/metal4.png', x: 250, y: 0, type: 'metal' },
-    { src: '/images/games/trash/metal.png', x: 300, y: 0, type: 'metal' },
-
-    { src: '/images/games/trash/paper4.png', x: 0, y: 50, type: 'paper' },
-    { src: '/images/games/trash/metal6.png', x: 50, y: 50, type: 'metal' },
-
-    { src: '/images/games/trash/plastic.png', x: 100, y: 50, type: 'plastic' },
-    { src: '/images/games/trash/plastic2.png', x: 150, y: 50, type: 'plastic' },
-    { src: '/images/games/trash/paper.png', x: 200, y: 50, type: 'paper' },
-    { src: '/images/games/trash/paper2.png', x: 250, y: 50, type: 'paper' },
-    { src: '/images/games/trash/paper3.png', x: 300, y: 50, type: 'paper' },
-    { src: '/images/games/trash/paper5.png', x: 0, y: 100, type: 'paper' },
-    { src: '/images/games/trash/metal2.png', x: 50, y: 100, type: 'metal' },
-    { src: '/images/games/trash/metal3.png', x: 100, y: 100, type: 'metal' },
-    { src: '/images/games/trash/metal9.png', x: 150, y: 100, type: 'metal' },
-  ],
-}
-const levelToBins: Record<number, { src: string; x: number; y: number; type: string }[]> = {
-  1: [
-    { src: '/images/games/trash/trash-bins/paper', x: 2500, y: 1150, type: 'paper' },
-    { src: '/images/games/trash/trash-bins/plastic', x: 1500, y: 1150, type: 'plastic' },
-    { src: '/images/games/trash/trash-bins/metal', x: 500, y: 1150, type: 'metal' },
-  ],
-}
-
 const dropZones = computed(() => {
-  const level = 1
-  return levelToBins[level].map((bin) => ({
+  return levelToBins[store.difficulty].map((bin) => ({
     x: bin.x,
     y: bin.y,
     width: BIN_WIDTH,
@@ -84,13 +67,6 @@ function isPointInZone(
   )
 }
 
-watchEffect(() => {
-  console.log(`output->dropZones`, dropZones.value)
-})
-
-const currentBins = computed(() => levelToBins[currentLevel.value])
-const currentItems = ref(levelToItems[currentLevel.value].map((item) => ({ ...item })))
-
 const draggingIndex = ref<number | null>(null)
 const offset = ref({ x: 0, y: 0 })
 
@@ -108,7 +84,7 @@ function getEventPosition(event: TouchEvent | MouseEvent) {
 function startDrag(index: number, event: TouchEvent | MouseEvent) {
   draggingIndex.value = index
   const pos = getEventPosition(event)
-  const item = currentItems.value[index]
+  const item = store.currentItems.value[index]
   offset.value.x = pos.x - item.x
   offset.value.y = pos.y - item.y
 }
@@ -116,40 +92,37 @@ function startDrag(index: number, event: TouchEvent | MouseEvent) {
 function onDrag(event: TouchEvent | MouseEvent) {
   if (draggingIndex.value === null) return
   const pos = getEventPosition(event)
-  const item = currentItems.value[draggingIndex.value]
+  const item = store.currentItems.value[draggingIndex.value]
   item.x = pos.x - offset.value.x
   item.y = pos.y - offset.value.y
   currentPos.value = pos
 }
 
 function clampItemToContainer(index: number) {
-  if (!containerRef.value) return
-  const container = containerRef.value
-  const item = currentItems.value[index]
+  const item = store.currentItems.value[index]
+  const itemSize = 360 // replace if needed with actual size
+  const x = item.x
+  const y = item.y
 
-  const containerRect = container.getBoundingClientRect()
-  const itemSize = 50 // adjust based on actual image size (or calculate dynamically)
+  console.log(`output->item`, item)
 
-  // Clamp x
-  item.x = Math.max(0, Math.min(item.x, containerRect.width - itemSize))
-  // Clamp y
-  item.y = Math.max(0, Math.min(item.y, containerRect.height - itemSize))
-}
+  // Clamp X between 0 and (viewport width - item size)
+  item.x = Math.max(0, Math.min(x, 3840 - itemSize))
 
-function removeItem(inputSrc: string) {
-  currentItems.value = currentItems.value.filter(({ src }) => inputSrc !== src)
+  // Clamp Y between 0 and (viewport height - item size)
+  item.y = Math.max(0, Math.min(y, 2160 - itemSize))
 }
 
 function endDrag() {
   if (draggingIndex.value !== null) {
     clampItemToContainer(draggingIndex.value)
 
-    const droppedItem = currentItems.value[draggingIndex.value]
+    const droppedItem = store.currentItems.value[draggingIndex.value]
     dropZones.value.forEach((zone) => {
       const res = isPointInZone(droppedItem.x, droppedItem.y, zone)
       if (!res) return
       if (zone.type !== droppedItem.type) return
-      removeItem(droppedItem.src)
+      store.removeItem(droppedItem.src)
     })
 
     // Log or handle the dropped item and its position
