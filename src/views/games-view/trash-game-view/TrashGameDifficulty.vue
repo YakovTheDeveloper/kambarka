@@ -1,6 +1,7 @@
 <template>
   <div class="container-padding container-bg">
-    <Header title="Мемори" />
+    <Header title="Экология" />
+    <Space value="400" />
     <DifficultyChoice route-to-game="/games/trash" :current="current" title="Выберите сложность">
       <DifficultyChoiceCards
         :variants="[
@@ -18,6 +19,7 @@
 <script setup lang="ts">
 import DifficultyChoice from '@/components/difficulty-choice/DifficultyChoice.vue'
 import DifficultyChoiceCards from '@/components/difficulty-choice/DifficultyChoiceCards.vue'
+import Space from '@/components/space/Space.vue'
 import Header from '@/views/shared/header/Header.vue'
 import { ref, watchEffect } from 'vue'
 

@@ -3,14 +3,26 @@
     <Header :hasBackButton="true" :has-home-button="true" title="Найди отличия"></Header>
     <div class="cards">
       <div
-        @click="onCardClick"
         class="cards-card"
         :style="{
           backgroundImage: `url(${cards[0]})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }"
-      ></div>
+      >
+        <span
+          @click="() => onClick(index)"
+          v-for="(mark, index) in solutionMarks"
+          :key="index"
+          class="mark"
+          :style="{
+            position: 'absolute',
+            top: `${mark.y}px`,
+            left: `${mark.x}px`,
+            opacity: foundIndices.includes(index) ? '1' : '0',
+          }"
+        />
+      </div>
       <div
         class="cards-card"
         :style="{
@@ -18,29 +30,51 @@
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }"
-      ></div>
+      >
+        <span
+          @click="() => onClick(index)"
+          v-for="(mark, index) in solutionMarks"
+          :key="index"
+          class="mark mark_second"
+          :style="{
+            position: 'absolute',
+            top: `${mark.y}px`,
+            left: `${mark.x}px`,
+            opacity: foundIndices.includes(index) ? '1' : '0',
+          }"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import DifficultyChoice from '@/components/difficulty-choice/DifficultyChoice.vue'
-import DifficultyChoiceCards from '@/components/difficulty-choice/DifficultyChoiceCards.vue'
 import Header from '@/views/shared/header/Header.vue'
 import { computed, ref, watchEffect } from 'vue'
 import { useGetDifficulty } from '../composables/useGetDifficulty'
-import { difficultyToCards } from './config'
+import { useRouter } from 'vue-router'
+import { difficultyData } from './config'
 
 const difficultyStore = useGetDifficulty()
-
-const onCardClick = (e) => {
-  const container = e.currentTarget.getBoundingClientRect()
-  const x = Math.round(e.clientX - container.left)
-  const y = Math.round(e.clientY - container.top)
-  console.log(`{x:${x}, y:${y}}`)
+const router = useRouter()
+const foundIndices = ref<number[]>([])
+const onClick = (idx: number) => {
+  if (!foundIndices.value.includes(idx)) {
+    foundIndices.value.push(idx)
+  }
 }
+const cards = computed(() => difficultyData[difficultyStore.difficulty.value || 1].cards)
+const solutionMarks = computed(
+  () => difficultyData[difficultyStore.difficulty.value || 1].solutions,
+)
 
-const cards = computed(() => difficultyToCards[difficultyStore.difficulty.value || 1])
+watchEffect(() => {
+  console.log(`output->solutionMarks`, solutionMarks.value)
+  console.log(`output->solutionMarks`, foundIndices.value.length, solutionMarks.value.length)
+  if (foundIndices.value.length === solutionMarks.value.length) {
+    router.push(`/games/find-difference/finish?difficulty=${difficultyStore.difficulty.value}`)
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -52,6 +86,31 @@ const cards = computed(() => difficultyToCards[difficultyStore.difficulty.value 
 
   &-card {
     border-radius: 60px;
+    position: relative;
+  }
+}
+
+.mark {
+  width: 300px;
+  height: 300px;
+  // background-color: aqua;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 196px;
+    height: 196px;
+    border: 18px solid #fff;
+    border-radius: 50%;
+  }
+
+  &_second::after {
+    border-color: #f53a3a;
   }
 }
 </style>

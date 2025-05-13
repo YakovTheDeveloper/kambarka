@@ -2,7 +2,7 @@
   <div class="container-bg container-padding">
     <Header title="Игры в музее" />
     <div class="cards">
-      <div v-for="{ img, title, to } in cards" class="card">
+      <div v-for="{ img, title, to } in cards" class="card" @click="router.push(to)">
         <h2>{{ title }}</h2>
         <img :src="img" alt="" />
       </div>
@@ -11,13 +11,14 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import Header from '../shared/header/Header.vue'
-
+const router = useRouter()
 const cards = [
-  { title: 'Пазлы', img: '/images/games/1.png', to: '' },
-  { title: 'Мемори', img: '/images/games/2.png', to: '' },
-  { title: 'Экология', img: '/images/games/3.png', to: '' },
-  { title: 'Найди отличия', img: '/images/games/4.png', to: '' },
+  { title: 'Пазлы', img: '/images/games/1.png', to: '/games/puzzles-difficulty' },
+  { title: 'Мемори', img: '/images/games/2.png', to: '/games/memory-difficulty' },
+  { title: 'Экология', img: '/images/games/3.png', to: '/games/trash-difficulty' },
+  { title: 'Найди отличия', img: '/images/games/4.png', to: '/games/find-difference-difficulty' },
 ]
 </script>
 

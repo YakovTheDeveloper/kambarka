@@ -10,7 +10,7 @@
         backgroundPosition: 'center',
       }"
     >
-      <p class="cards-card-number" v-if="current !== index">{{ index }}</p>
+      <p class="cards-card-number" v-if="current !== index">{{ index + 1 }}</p>
       <AcceptIcon2 v-else class="cards-card-number" :style="{ background: 'none' }" />
     </div>
   </div>
