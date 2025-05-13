@@ -14,6 +14,17 @@ export const useGameState = () => {
     currentItems.value = currentItems.value.filter(({ src }) => inputSrc !== src)
   }
 
+  function resetPosition(inputSrc: string) {
+    const item = levelToItems[difficultyStore.difficulty.value].find(({ src }) => src === inputSrc)
+    if (item) {
+      const currentItem = currentItems.value.find(({ src }) => src === inputSrc)
+      if (currentItem) {
+        currentItem.x = item.x
+        currentItem.y = item.y
+      }
+    }
+  }
+
   watch(
     () => currentItems.value.length,
     (newLength) => {
@@ -27,6 +38,7 @@ export const useGameState = () => {
     currentBins,
     currentItems,
     removeItem,
+    resetPosition,
     difficulty: difficultyStore.difficulty.value,
   }
 }

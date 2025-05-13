@@ -121,7 +121,10 @@ function endDrag() {
     dropZones.value.forEach((zone) => {
       const res = isPointInZone(droppedItem.x, droppedItem.y, zone)
       if (!res) return
-      if (zone.type !== droppedItem.type) return
+      if (zone.type !== droppedItem.type) {
+        store.resetPosition(droppedItem.src)
+        return
+      }
       store.removeItem(droppedItem.src)
     })
 
