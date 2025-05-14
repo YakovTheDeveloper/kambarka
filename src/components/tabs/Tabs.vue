@@ -7,20 +7,19 @@
         :class="['tabs-item', { 'tabs-item_active': currentTab === tab.value }]"
         @click="selectTab(tab.value)"
       >
-        {{ tab.value }}
+        {{ tab.label }}
       </button>
     </div>
-    <div class="tabs-content">
-      <slot :name="currentTab"></slot>
-    </div>
   </div>
+  <slot :name="currentTab" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineProps, defineEmits } from 'vue'
 
 interface Tab {
   value: string
+  label: string
 }
 
 const props = defineProps<{
@@ -38,6 +37,10 @@ function selectTab(value: string) {
 .tabs {
   display: flex;
   gap: 48px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 60px;
+  width: fit-content;
+  padding: 30px 66px;
 
   &-header {
     display: flex;

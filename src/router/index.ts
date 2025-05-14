@@ -12,6 +12,10 @@ import FindDifferenceFinish from '@/views/games-view/find-difference-game-view/F
 import MemoryGameDifficulty from '@/views/games-view/memory-game-view/MemoryGameDifficulty.vue'
 import MemoryGameView from '@/views/games-view/memory-game-view/MemoryGameView.vue'
 import MemoryGameFinish from '@/views/games-view/memory-game-view/MemoryGameFinish.vue'
+import PuzzleGameDifficulty from '@/views/games-view/puzzle-game-view/PuzzleGameDifficulty.vue'
+import GeoInfoView from '@/views/geo-info-view/GeoInfoView.vue'
+import MonumentsView from '@/views/monuments-view/MonumentsView.vue'
+import OneMonumentView from '@/views/monuments-view/OneMonumentView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -72,6 +76,21 @@ const router = createRouter({
       component: MemoryGameFinish,
     },
     {
+      path: '/games/puzzle-difficulty',
+      name: 'games/puzzle-difficulty',
+      component: PuzzleGameDifficulty,
+    },
+    {
+      path: '/games/puzzle',
+      name: 'games/puzzle',
+      component: PuzzleGameDifficulty,
+    },
+    {
+      path: '/games/puzzle/finish',
+      name: 'games/puzzle/finish',
+      component: PuzzleGameDifficulty,
+    },
+    {
       path: '/sights',
       name: 'sights',
       component: SightsView,
@@ -80,6 +99,21 @@ const router = createRouter({
       path: '/animal',
       name: 'animal',
       component: AnimalView,
+    },
+    {
+      path: '/geo-info',
+      name: 'geo-info',
+      component: GeoInfoView,
+    },
+    {
+      path: '/monuments',
+      name: 'monuments',
+      component: MonumentsView,
+    },
+    {
+      path: '/monuments/:id',
+      name: 'monuments-one',
+      component: OneMonumentView,
     },
   ],
 })

@@ -3,6 +3,7 @@ import GameIcon from '@/components/icons/GameIcon.vue'
 import GeoIcon from '@/components/icons/GeoIcon.vue'
 import LeafIcon from '@/components/icons/LeafIcon.vue'
 import StarsIcon from '@/components/icons/StarsIcon.vue'
+import { useRouter } from 'vue-router'
 
 interface Card {
   title: string
@@ -19,12 +20,14 @@ const menuCards: { titleHTML: string; icon: any; to: string }[] = [
   {
     titleHTML: `Географическая</br> справка`,
     icon: GeoIcon,
-    to: '/geo',
+    to: '/geo-info',
   },
   { titleHTML: 'Достопримечательности района', icon: StarsIcon, to: '/sights' },
   { titleHTML: 'Памятники</br> природы', icon: LeafIcon, to: '/monuments' },
   { titleHTML: 'Игры </br> в музее', icon: GameIcon, to: '/games' },
 ]
+
+const router = useRouter()
 </script>
 
 <template>
@@ -62,7 +65,11 @@ const menuCards: { titleHTML: string; icon: any; to: string }[] = [
         </div>
       </div>
       <div class="second">
-        <div v-for="{ icon, titleHTML } in menuCards" class="radius col padding second-card">
+        <div
+          v-for="{ icon, titleHTML, to } in menuCards"
+          class="radius col padding second-card"
+          @click="router.push(to)"
+        >
           <component :is="icon"></component>
           <p v-html="titleHTML" />
         </div>

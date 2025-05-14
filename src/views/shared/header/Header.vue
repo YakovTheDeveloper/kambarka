@@ -1,10 +1,10 @@
 <template>
   <div class="header">
-    <button class="button" v-if="props.hasBackButton">
+    <button class="button" v-if="props.hasBackButton" @click="router.back()">
       <BackButtonIcon />
     </button>
     <h1>{{ $props.title }}</h1>
-    <button class="button button_home" v-if="props.hasHomeButton">
+    <button class="button button_home" v-if="props.hasHomeButton" @click="router.push('/')">
       <HomeButtonIcon />
     </button>
     <slot></slot>
@@ -14,6 +14,9 @@
 <script setup lang="ts">
 import BackButtonIcon from '@/components/BackButtonIcon.vue'
 import HomeButtonIcon from '@/components/HomeButtonIcon.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = withDefaults(
   defineProps<{
