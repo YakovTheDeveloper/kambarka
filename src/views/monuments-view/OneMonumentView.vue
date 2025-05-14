@@ -17,7 +17,7 @@
           </template>
           <template #another>
             <Space value="50" />
-            <div v-for="item in 2" class="additional-item">
+            <div v-for="item in 2" class="additional-item" @click="currentDocument = item">
               <DocumentIcon /> <span>Паспорт</span>
             </div>
           </template>
@@ -25,6 +25,9 @@
       </div>
     </div>
   </div>
+  <teleport to="body">
+    <MonumentDocuments v-show="currentDocument" @close="currentDocument = null" />
+  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -34,6 +37,8 @@ import ItemDescription from '../shared/item-description/ItemDescription.vue'
 import Tabs from '@/components/tabs/Tabs.vue'
 import Space from '@/components/space/Space.vue'
 import DocumentIcon from '@/components/icons/DocumentIcon.vue'
+import MonumentDocuments from './MonumentDocuments.vue'
+import { ref } from 'vue'
 
 const tabs = [
   { value: 'main', label: 'Основная информация' },
@@ -65,6 +70,8 @@ const items = [
       'Урочище валяй - уникальный лес в Камбарском районе. Располагается на границе южной тайги, хвойно-лиственных лесов и северной лесостепи. Отсюда и биологическое разнообразие. Здесь можно встретить 87 редких и исчезающих видов растений, 3 вида редких грибов и 24 вида редких исчезающих животных. Здесь растут сосны которые  в диаметре достигают 180 см., кедры.',
   },
 ]
+
+const currentDocument = ref(0)
 </script>
 
 <style scoped lang="scss">
