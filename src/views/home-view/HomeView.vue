@@ -9,56 +9,12 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import type { Preview } from '@/stores/types'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
-
-interface Card {
-  title: string
-  titleServer: string
-  image: string
-  to: string
-}
-const sections = ref<Preview[]>([])
-
-const arealCards: Card[] = computed(() => {
-  return [
-    { titleServer: sections.value[0]?.title, title: 'Водная', image: getServerImageUrl(sections.value[0]?.image), to: '/habitat?type=water' },
-    { titleServer: sections.value[1]?.title, title: 'Наземно-воздушная', image: getServerImageUrl(sections.value[1]?.image), to: '/habitat?type=wind' },
-    { titleServer: sections.value[2]?.title, title: 'Почвенная', image: getServerImageUrl(sections.value[2]?.image), to: '/habitat?type=earth' },
-  ]
-})
-
-const menuCards: { titleHTML: string; icon: any; to: string }[] = computed(() => ([
-  {
-    titleServer: sections.value[4]?.title, titleHTML: `Географическая</br> справка`,
-    icon: GeoIcon,
-    to: '/geo-info'
-  },
-  { titleServer: sections.value[5]?.title, titleHTML: 'Достопримечательности района', icon: StarsIcon, to: '/sights' },
-  { titleServer: sections.value[6]?.title, titleHTML: 'Памятники</br> природы', icon: LeafIcon, to: '/monuments' },
-  { titleServer: sections.value[7]?.title, titleHTML: 'Игры </br> в музее', icon: GameIcon, to: '/games' },
-]))
-
-const { fetchData } = useHabitatData()
-
-onMounted(() => {
-  fetchData()
-})
+import { useHomeStore } from '@/stores/homeStore'
+import { storeToRefs } from 'pinia'
 
 
-async function fetchSections() {
-  try {
-    const response = await fetch('http://api-kambarka-nature.test.itlabs.top/api/section', {
-      headers: { accept: 'application/json' },
-    })
-    if (!response.ok) throw new Error('Failed to fetch sections')
-    sections.value = await response.json()
-  } catch (error) {
-    console.error(error)
-  }
-}
 
-onMounted(() => {
-  fetchSections()
-})
+const { sections, arealCards, menuCards } = storeToRefs(useHomeStore())
 
 const router = useRouter()
 </script>

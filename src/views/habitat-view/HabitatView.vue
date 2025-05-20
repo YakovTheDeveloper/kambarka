@@ -1,14 +1,12 @@
 <template>
   <div class="container-bg container-padding">
-    <Header title="Достопримечательности района"></Header>
+    <Header :title="title">
+      <Search :value="query" @change="onChange" />
+    </Header>
     <div class="bg-alpha content">
       <CardList>
-        <Card
-          v-for="card in data"
-          :img="getServerImageUrl(card.image)"
-          :title="card.title"
-          @click="onCardClick(card.id)"
-        ></Card>
+        <Card v-for="card in filtered" :img="card.image" :title="card.title" category="habitat"
+          @click="onCardClick(card.id)" :id="card.id" :key="card.id" />
       </CardList>
     </div>
   </div>
@@ -20,8 +18,21 @@ import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
-
 const store = useHabitatData()
+
+const title = computed(() => {
+  const queryParam = route.query.type
+
+  if (queryParam === 'water') {
+    return 'Водная среда обитания'
+  } else if (queryParam === 'wind') {
+    return 'Наземно-воздушная среда'
+  } else if (queryParam === 'earth') {
+    return 'Почвенная среда обитания'
+  } else {
+    return 'Cреда обитания' // Default case if no matching type is found
+  }
+})
 
 const data = computed(() => {
   const queryParam = route.query.type
@@ -33,9 +44,10 @@ const data = computed(() => {
   } else if (queryParam === 'earth') {
     return store.earthData
   } else {
-    return null // Default case if no matching type is found
+    return [] // Default case if no matching type is found
   }
 })
+const { filtered, query, onChange } = useSearch(data.value)
 
 const onCardClick = (id: number) => {
   router.push(`/habitat/${id}`)
@@ -48,6 +60,8 @@ import Tabs from '@/components/tabs/Tabs.vue'
 import CardList from '@/components/card/CardList.vue'
 import { useHabitatData } from '@/stores/habitatStore'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import Search from '@/views/shared/search/Search.vue'
+import { useSearch } from '@/views/shared/composables/useSearch'
 </script>
 
 <style scoped lang="scss">
