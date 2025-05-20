@@ -83,7 +83,7 @@ import Header from '@/views/shared/header/Header.vue'
 import PuzzlePiece from './PuzzlePiece.vue'
 import { computed, nextTick, onMounted, ref, type Ref } from 'vue'
 import { usePuzzleSections } from './composables/PuzzleSections'
-import { pos } from './data'
+import { initPuzzlePositions, pos } from './data'
 import { useMovable } from './composables/useMovable'
 
 const puzzlesToOpen = ref<Record<string, boolean>>({})
@@ -123,9 +123,15 @@ const pieces = ref(
     const row = Math.floor(index / gridSize)
     const col = index % gridSize
     const { backgroundPosition } = pos[index]
-    let x = index % 2 === 0 ? -2500 : 300
 
-    return { row, col, x, y: 42 * index, show: true, backgroundPosition }
+    return {
+      row,
+      col,
+      x: initPuzzlePositions[index].x,
+      y: initPuzzlePositions[index].y,
+      show: true,
+      backgroundPosition,
+    }
   }),
 )
 
@@ -138,15 +144,35 @@ const removePuzzleFromUserCollection = (draggingIndex: Ref<number>) => {
   })
 }
 
+// const removePuzzleFromUserCollection = (draggingIndex: Ref<number>,x:number,y:number) => {
+//   pieces.value = pieces.value.map((item, index) => {
+//     if (index === draggingIndex.value) {
+//       return { ...item, show: false }
+//     }
+//     return item
+//   })
+// }
+
 const onDragEndAction = (draggingIndex: Ref<number>, droppedItem: { row: number; col: number }) => {
   const el = document.getElementById(`${droppedItem.row}/${droppedItem.col}`)
   if (el) {
     const rect = el.getBoundingClientRect()
-    const x = rect.left + rect.width / 2
-    const y = rect.top + rect.height / 2
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
     // const x = rect.left + rect.width
     // const y = rect.top + rect.height
-    const gridSection = getSectionFromScreenPoint(x, y)
+    const gridSection = getSectionFromScreenPoint(centerX, centerY)
+
+    const x = rect.left
+    const y = rect.top
+    const itemSize = 100 // updated item size
+
+    if (x < itemSize || y < itemSize || x + itemSize > 3840 || y + itemSize > 2160) {
+      console.log(`Item is out of screen: x=${x}, y=${y}`)
+      const idx = draggingIndex.value
+      pieces.value[idx].x = initPuzzlePositions[idx].x
+      pieces.value[idx].y = initPuzzlePositions[idx].y
+    }
 
     console.log(`output->gridSection`, gridSection)
 
