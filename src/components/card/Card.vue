@@ -2,7 +2,7 @@
   <div
     class="card"
     :style="{
-      background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${$props.img}') center/cover no-repeat`,
+      background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${$props.img}') right/cover no-repeat`,
     }"
   >
     <div class="card-title">{{ $props.title }}</div>

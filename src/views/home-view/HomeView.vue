@@ -3,17 +3,20 @@ import GameIcon from '@/components/icons/GameIcon.vue'
 import GeoIcon from '@/components/icons/GeoIcon.vue'
 import LeafIcon from '@/components/icons/LeafIcon.vue'
 import StarsIcon from '@/components/icons/StarsIcon.vue'
+import { useHabitatData } from '@/stores/habitatStore'
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 interface Card {
   title: string
   image: string
+  to: string
 }
 
 const arealCards: Card[] = [
-  { title: 'Водная', image: '/images/home/1.png' },
-  { title: 'Наземно-воздушная', image: '/images/home/2.png' },
-  { title: 'Почвенная', image: '/images/home/3.png' },
+  { title: 'Водная', image: '/images/home/1.png', to: '/habitat?type=water' },
+  { title: 'Наземно-воздушная', image: '/images/home/2.png', to: '/habitat?type=wind' },
+  { title: 'Почвенная', image: '/images/home/3.png', to: '/habitat?type=earth' },
 ]
 
 const menuCards: { titleHTML: string; icon: any; to: string }[] = [
@@ -26,6 +29,12 @@ const menuCards: { titleHTML: string; icon: any; to: string }[] = [
   { titleHTML: 'Памятники</br> природы', icon: LeafIcon, to: '/monuments' },
   { titleHTML: 'Игры </br> в музее', icon: GameIcon, to: '/games' },
 ]
+
+const { fetchData } = useHabitatData()
+
+onMounted(() => {
+  fetchData()
+})
 
 const router = useRouter()
 </script>
@@ -40,6 +49,7 @@ const router = useRouter()
           <div class="areal-cards row jcsb">
             <div
               v-for="card in arealCards"
+              @click="router.push(card.to)"
               :key="card.title"
               class="areal-card"
               :style="{

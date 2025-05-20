@@ -1,113 +1,341 @@
 <template>
   <div class="container">
-    <header class="block">
-      <button></button>
-      <p>Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщз</p>
+    <header class="block row" :style="{ alignItems: 'center', gap: '40px' }">
+      <button class="button" @click="router.back()" :style="{ borderRadius: '40px' }">
+        <BackButtonIcon />
+      </button>
+      <p>{{ data?.title }}</p>
     </header>
     <div class="left block">
       <p class="sub_s" :style="{ marginBottom: '40px' }">
-        Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+        {{ data?.name }}
       </p>
       <div class="col" :style="{ gap: '20px' }">
-        <div class="col" v-for="item in 5">
-          <p class="sub_s">Щщщщщщщщщз</p>
-          <p>Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ</p>
-        </div>
-        <div class="col" v-for="item in 2" :style="{ marginTop: '20px' }">
-          <p class="sub">Щщщщщщщщщщз</p>
-          <p>
-            Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
-          </p>
-        </div>
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field1Name"
+          :desc="data?.blockOne[0].field1Description"
+        />
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field2Name"
+          :desc="data?.blockOne[0].field2Description"
+        />
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field3Name"
+          :desc="data?.blockOne[0].field3Description"
+        />
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field4Name"
+          :desc="data?.blockOne[0].field4Description"
+        />
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field5Name"
+          :desc="data?.blockOne[0].field5Description"
+        />
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field6Name"
+          :desc="data?.blockOne[0].field6Description"
+        />
+        <AnimalViewBlockOne
+          :title="data?.blockOne[0].field7Name"
+          :desc="data?.blockOne[0].field7Description"
+        />
+        <AnimalViewBlockOne2
+          :title="data?.blockOne[0].field8Name"
+          :desc="data?.blockOne[0].field8Description"
+        />
+        <AnimalViewBlockOne2
+          :title="data?.blockOne[0].field9Name"
+          :desc="data?.blockOne[0].field9Description"
+        />
+        <AnimalViewBlockOne2
+          :title="data?.blockOne[0].field10Name"
+          :desc="data?.blockOne[0].field10Description"
+        />
       </div>
     </div>
     <div class="center-1 block">
-      <div class="img"><img src="" alt="" /></div>
-      <div class="col">
-        <p class="sub">Щщщщщщщщщщз</p>
+      <div class="img"><img :src="getServerImageUrl(data?.image)" alt="" /></div>
+      <div class="col" v-if="data?.blockTwo[0].field11Name">
+        <p class="sub">{{ data?.blockTwo[0].field11Name }}</p>
         <p>
-          Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+          {{ data?.blockTwo[0].field11Description }}
         </p>
       </div>
       <div class="row" :style="{ gap: '20px' }">
-        <div class="col">
-          <p class="sub_s">Щщщщщщщщщз</p>
-          <p>Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ</p>
+        <div class="col" v-if="data?.blockTwo[0].field12Name">
+          <p class="sub_s">{{ data?.blockTwo[0].field12Name }}</p>
+          <p>{{ data?.blockTwo[0].field12Description }}</p>
         </div>
-        <div class="col">
-          <p class="sub_s">Щщщщщщщщщз</p>
-          <p>Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ</p>
+        <div class="col" v-if="data?.blockTwo[0].field13Name">
+          <p class="sub_s">{{ data?.blockTwo[0].field13Name }}</p>
+          <p>{{ data?.blockTwo[0].field13Description }}</p>
         </div>
       </div>
     </div>
     <div class="center-2 block">
-      <p class="sub">Щщщщщщщщщщщщщщщщз</p>
+      <p class="sub">{{ data?.blockThree[0]?.field14Name }}</p>
       <p>
-        Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+        {{ data?.blockThree[0]?.field14Description }}
       </p>
       <div class="col" :style="{ gap: '30px', marginTop: '40px' }">
-        <div v-for="item in 7" class="row" :style="{ gap: '30px' }">
-          <img src="" alt="" :style="{ width: '100px', height: '100px' }" />
-          <div>
-            <p class="sub_s">Щщщщщщщщщз</p>
-            <p class="fz-20">Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ</p>
-          </div>
-        </div>
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field15Name"
+          :desc="data?.blockThree[0]?.field15Description"
+          :img="data?.blockThreeMedia?.image15"
+        />
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field16Name"
+          :desc="data?.blockThree[0]?.field16Description"
+          :img="data?.blockThreeMedia?.image16"
+        />
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field17Name"
+          :desc="data?.blockThree[0]?.field17Description"
+          :img="data?.blockThreeMedia?.image17"
+        />
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field18Name"
+          :desc="data?.blockThree[0]?.field18Description"
+          :img="data?.blockThreeMedia?.image18"
+        />
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field19Name"
+          :desc="data?.blockThree[0]?.field19Description"
+          :img="data?.blockThreeMedia?.image19"
+        />
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field20Name"
+          :desc="data?.blockThree[0]?.field20Description"
+          :img="data?.blockThreeMedia?.image20"
+        />
+        <AnimalViewBlockThree
+          :title="data?.blockThree[0]?.field21Name"
+          :desc="data?.blockThree[0]?.field21Description"
+          :img="data?.blockThreeMedia?.image21"
+        />
       </div>
     </div>
     <div class="center-1-bottom block">
-      <div>123</div>
-      <div>123</div>
+      <img v-if="data?.blockTwoMedia.image2" :src="getServerImageUrl(data?.blockTwoMedia.image2)" />
+      <img v-if="data?.blockTwoMedia.image3" :src="getServerImageUrl(data?.blockTwoMedia.image3)" />
     </div>
-    <div class="center-2-bottom block"></div>
+    <div class="center-2-bottom block">
+      <video
+        v-if="data?.blockThreeMedia.video"
+        :src="getServerImageUrl(data?.blockThreeMedia?.video)"
+      ></video>
+    </div>
     <div class="right-top block row" :style="{ gap: '40px' }">
-      <img src="" alt="" :style="{ width: '270px' }" class="round" />
-      <div class="col" :style="{ width: '580px' }">
-        <p class="sub">Щщщщщщщщщщз</p>
+      <img
+        v-if="data?.blockFourMedia?.image22"
+        :src="getServerImageUrl(data?.blockFourMedia?.image22)"
+        alt=""
+        :style="{ width: '270px' }"
+        class="round"
+      />
+      <div class="col" :style="{ width: '580px', justifyContent: 'center' }">
+        <p class="sub">{{ data?.blockFour[0]?.field22Name }}</p>
         <p>
-          Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+          {{ data?.blockFour[0]?.field22Description }}
         </p>
       </div>
       <div class="col" :style="{ gap: '20px', justifyContent: 'space-evenly' }">
-        <div class="row" v-for="item in 2" :style="{ gap: '20px' }">
+        <div
+          v-if="data?.blockFourMedia?.audio1"
+          class="row"
+          :style="{ gap: '20px', alignItems: 'center' }"
+        >
           <img src="" alt="" :style="{ width: '100px' }" class="round" />
-          <p class="sub_s">Щщщщщщщщщщз</p>
+          <p class="sub_s">{{ data?.blockFour[0]?.audio1Name }}</p>
+          <audio :src="data?.blockFourMedia?.audio1"></audio>
+        </div>
+        <div
+          v-if="data?.blockFourMedia?.audio2"
+          class="row"
+          :style="{ gap: '20px', alignItems: 'center' }"
+        >
+          <img src="" alt="" :style="{ width: '100px' }" class="round" />
+          <p class="sub_s">{{ data?.blockFour[0]?.audio2Name }}</p>
+          <audio :src="data?.blockFourMedia?.audio2"></audio>
         </div>
       </div>
     </div>
-    <div class="right block"></div>
     <div class="center-3 block">
-      <p class="sub_s" :style="{ marginBottom: '20px' }">Щщщщщщщщщщз</p>
-      <div class="row" :style="{ gap: '20px' }">
-        <img src="" alt="" :style="{ width: '150px', height: '150px' }" class="round" />
+      <p class="sub_s" :style="{ marginBottom: '20px' }">
+        {{ data?.blockFive[0]?.field23Name }}
+      </p>
+      <div class="row" :style="{ gap: '20px', alignItems: 'center' }">
+        <img
+          :src="getServerImageUrl(data?.blockFiveMedia?.image23)"
+          alt=""
+          :style="{ width: '150px', height: '150px' }"
+          class="round"
+        />
         <p>
-          Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+          {{ data?.blockFive[0]?.field23Description }}
         </p>
       </div>
-      <p class="sub" :style="{ margin: '40px 0 20px' }">Щщщщщщщщщщщщщщщщщщщщз</p>
-      <div class="col" v-for="item in 2" :style="{ margin: '0 0 20px' }">
-        <p class="sub_s">Щщщщщщщщщщщщщщщщщщщщ</p>
+      <p class="sub" :style="{ margin: '40px 0 40px' }">
+        {{ data?.blockFive[0]?.sectionTitle24 }}
+      </p>
+      <div class="col" :style="{ margin: '0 0 20px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field24Name }}</p>
         <p>
-          Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+          {{ data?.blockFive[0]?.field24Description }}
         </p>
       </div>
+      <div class="col" :style="{ margin: '0 0 20px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field24Name }}</p>
+        <p>
+          {{ data?.blockFive[0]?.field24Description }}
+        </p>
+      </div>
+
       <div :style="{ height: '20px' }"></div>
-      <div class="col" v-for="item in 4" :style="{ margin: '0 0 30px' }">
-        <p class="sub_s">Щщщщщщщщщщщщщщщщщщщщ</p>
-        <p>Щщщщщщщщщщщщщщщщщщщщщщщщщщ</p>
+
+      <div v-if="data?.blockFive[0]?.field25Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field25Name }}</p>
+        <p>{{ data?.blockFive[0]?.field25Description }}</p>
       </div>
+      <div v-if="data?.blockFive[0]?.field26Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field26Name }}</p>
+        <p>{{ data?.blockFive[0]?.field26Description }}</p>
+      </div>
+      <div v-if="data?.blockFive[0]?.field27Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field27Name }}</p>
+        <p>{{ data?.blockFive[0]?.field27Description }}</p>
+      </div>
+      <div v-if="data?.blockFive[0]?.field28Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field28Name }}</p>
+        <p>{{ data?.blockFive[0]?.field28Description }}</p>
+      </div>
+      <div v-if="data?.blockFive[0]?.field29Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field29Name }}</p>
+        <p>{{ data?.blockFive[0]?.field29Description }}</p>
+      </div>
+
       <div :style="{ height: '10px' }"></div>
-      <div class="col" v-for="item in 2" :style="{ margin: '0 0 30px' }">
-        <p class="sub_s">Щщщщщщщщщщщщщщщщщщщщ</p>
+
+      <div v-if="data?.blockFive[0]?.field30Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field30Name }}</p>
         <p class="fz-20">
-          Щщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщщ
+          {{ data?.blockFive[0]?.field30Description }}
         </p>
+      </div>
+      <div v-if="data?.blockFive[0]?.field31Name" class="col" :style="{ margin: '0 0 30px' }">
+        <p class="sub_s">{{ data?.blockFive[0]?.field31Name }}</p>
+        <p class="fz-20">
+          {{ data?.blockFive[0]?.field31Description }}
+        </p>
+      </div>
+    </div>
+    <div class="right block">
+      <div class="row" :style="{ justifyContent: 'space-between' }">
+        <div class="col" :style="{ width: '580px', justifyContent: 'center' }">
+          <p class="sub" :style="{ fontSize: '56px' }">{{ data?.blockSix[0]?.field32Name }}</p>
+          <p>
+            {{ data?.blockSix[0]?.field32Description }}
+          </p>
+        </div>
+        <img
+          v-if="data?.blockSixMedia?.image32"
+          :src="getServerImageUrl(data?.blockSixMedia?.image32)"
+          alt=""
+          :style="{ width: '210px', minWidth: '210px' }"
+          class="round"
+        />
+      </div>
+      <Space value="50" />
+      <div class="row" :style="{ justifyContent: 'space-between' }">
+        <div class="col" :style="{ width: '270px', gap: '10px' }">
+          <p class="sub" :style="{ fontSize: '30px' }">{{ data?.blockSix[0]?.field33Name }}</p>
+          <img
+            v-if="data?.blockSixMedia?.image33"
+            :src="getServerImageUrl(data?.blockSixMedia?.image33)"
+            alt=""
+            :style="{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              minWidth: '210px',
+              borderRadius: '24px',
+            }"
+          />
+        </div>
+        <div class="col" :style="{ width: '580px', gap: '10px' }">
+          <p class="sub" :style="{ fontSize: '30px' }">{{ data?.blockSix[0]?.field34Name }}</p>
+          <img
+            v-if="data?.blockSixMedia?.image34"
+            :src="getServerImageUrl(data?.blockSixMedia?.image34)"
+            alt=""
+            :style="{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              minWidth: '210px',
+              borderRadius: '24px',
+            }"
+          />
+        </div>
+      </div>
+
+      <div :style="{ marginTop: 'auto' }">
+        <div class="col" :style="{ justifyContent: 'center' }">
+          <p class="sub" :style="{ fontSize: '56px' }">{{ data?.blockSix[0]?.field35Name }}</p>
+          <p>
+            {{ data?.blockSix[0]?.field35Description }}
+          </p>
+        </div>
+        <Space value="40" />
+        <div class="col" :style="{ justifyContent: 'center' }">
+          <p class="sub" :style="{ fontSize: '56px' }">{{ data?.blockSix[0]?.field36Name }}</p>
+          <div v-html="data?.blockSix[0]?.field36Description"></div>
+        </div>
+        <Space value="30" />
+        <div :style="{ display: 'grid', gridTemplateColumns: '1fr 1fr' }">
+          <div class="column" v-if="data?.blockSix[0]?.field37Name">
+            <p class="sub" :style="{ fontSize: '30px', lineHeight: '130%' }">
+              {{ data?.blockSix[0]?.field37Name }}
+            </p>
+            <p>{{ data?.blockSix[0]?.field37Description }}</p>
+          </div>
+          <div class="column" v-if="data?.blockSix[0]?.field38Name">
+            <p class="sub" :style="{ fontSize: '30px', lineHeight: '130%' }">
+              {{ data?.blockSix[0]?.field38Name }}
+            </p>
+            <p>{{ data?.blockSix[0]?.field38Description }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useHabitatData } from '@/stores/habitatStore'
+import { computed, onMounted, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
+import AnimalViewBlockOne from './AnimalViewBlockOne.vue'
+import AnimalViewBlockOne2 from './AnimalViewBlockOne2.vue'
+import BackButtonIcon from '@/components/BackButtonIcon.vue'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import AnimalViewBlockThree from './AnimalViewBlockThree.vue'
+import Space from '@/components/space/Space.vue'
+
+const router = useRouter()
+const store = useHabitatData()
+
+const data = computed(() => store.getById(+router.currentRoute.value.params.id))
+
+watchEffect(() => {
+  console.log(`output->data`, data.value)
+})
+
+onMounted(() => {
+  const { id } = router.currentRoute.value.params
+  store.fetchHabitat(+id)
+})
+</script>
 
 <style scoped lang="scss">
 .fz-20 {
@@ -213,6 +441,10 @@ header {
   left: 700px;
   bottom: 80px;
 
+  img {
+    border-radius: 50%;
+  }
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -228,6 +460,13 @@ header {
   height: 580px;
   left: 1630px;
   bottom: 80px;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+  }
 }
 
 .right {
@@ -235,6 +474,8 @@ header {
   height: 1690px;
   left: 2870px;
   bottom: 80px;
+  flex-direction: column;
+  display: flex;
 }
 
 .right-top {
