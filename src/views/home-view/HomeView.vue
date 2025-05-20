@@ -4,36 +4,60 @@ import GeoIcon from '@/components/icons/GeoIcon.vue'
 import LeafIcon from '@/components/icons/LeafIcon.vue'
 import StarsIcon from '@/components/icons/StarsIcon.vue'
 import { useHabitatData } from '@/stores/habitatStore'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import type { Preview } from '@/stores/types'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
 
 interface Card {
   title: string
+  titleServer: string
   image: string
   to: string
 }
+const sections = ref<Preview[]>([])
 
-const arealCards: Card[] = [
-  { title: 'Водная', image: '/images/home/1.png', to: '/habitat?type=water' },
-  { title: 'Наземно-воздушная', image: '/images/home/2.png', to: '/habitat?type=wind' },
-  { title: 'Почвенная', image: '/images/home/3.png', to: '/habitat?type=earth' },
-]
+const arealCards: Card[] = computed(() => {
+  return [
+    { titleServer: sections.value[0]?.title, title: 'Водная', image: getServerImageUrl(sections.value[0]?.image), to: '/habitat?type=water' },
+    { titleServer: sections.value[1]?.title, title: 'Наземно-воздушная', image: getServerImageUrl(sections.value[1]?.image), to: '/habitat?type=wind' },
+    { titleServer: sections.value[2]?.title, title: 'Почвенная', image: getServerImageUrl(sections.value[2]?.image), to: '/habitat?type=earth' },
+  ]
+})
 
-const menuCards: { titleHTML: string; icon: any; to: string }[] = [
+const menuCards: { titleHTML: string; icon: any; to: string }[] = computed(() => ([
   {
-    titleHTML: `Географическая</br> справка`,
+    titleServer: sections.value[4]?.title, titleHTML: `Географическая</br> справка`,
     icon: GeoIcon,
-    to: '/geo-info',
+    to: '/geo-info'
   },
-  { titleHTML: 'Достопримечательности района', icon: StarsIcon, to: '/sights' },
-  { titleHTML: 'Памятники</br> природы', icon: LeafIcon, to: '/monuments' },
-  { titleHTML: 'Игры </br> в музее', icon: GameIcon, to: '/games' },
-]
+  { titleServer: sections.value[5]?.title, titleHTML: 'Достопримечательности района', icon: StarsIcon, to: '/sights' },
+  { titleServer: sections.value[6]?.title, titleHTML: 'Памятники</br> природы', icon: LeafIcon, to: '/monuments' },
+  { titleServer: sections.value[7]?.title, titleHTML: 'Игры </br> в музее', icon: GameIcon, to: '/games' },
+]))
 
 const { fetchData } = useHabitatData()
 
 onMounted(() => {
   fetchData()
+})
+
+
+async function fetchSections() {
+  try {
+    const response = await fetch('http://api-kambarka-nature.test.itlabs.top/api/section', {
+      headers: { accept: 'application/json' },
+    })
+    if (!response.ok) throw new Error('Failed to fetch sections')
+    sections.value = await response.json()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+onMounted(() => {
+  fetchSections()
 })
 
 const router = useRouter()
@@ -50,26 +74,28 @@ const router = useRouter()
             <div v-for="card in arealCards" @click="router.push(card.to)" :key="card.title" class="areal-card" :style="{
               background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${card.image}') center/cover no-repeat`,
             }">
-              <div class="areal-card-title">{{ card.title }}</div>
+              <div class="areal-card-title">{{ card.titleServer }}</div>
             </div>
           </div>
         </div>
         <div class="radius bg-alpha col padding red-book">
           <div @click="router.push('/redbook')" class="image-box" :style="{
-            background: `url('/images/home/4.png') center/cover no-repeat`,
+            background: `url(${getServerImageUrl(sections[3]?.image)}) center/cover no-repeat`,
             height: '804px',
           }"></div>
           <div class="row">
-            <h2 class="section-title section-title_small">Красная книга Камбарского района</h2>
+            <h2 class="section-title section-title_small">
+              {{ sections[3]?.title }}
+            </h2>
             <button class="button">Подробнее</button>
           </div>
         </div>
       </div>
       <div class="second">
-        <div v-for="{ icon, titleHTML, to } in menuCards" class="radius col padding second-card"
+        <div v-for="{ icon, titleHTML, to, titleServer } in menuCards" class="radius col padding second-card"
           @click="router.push(to)">
           <component :is="icon"></component>
-          <p v-html="titleHTML" />
+          <p v-html="titleServer" />
         </div>
       </div>
     </div>
