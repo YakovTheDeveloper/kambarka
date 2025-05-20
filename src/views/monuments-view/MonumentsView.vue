@@ -16,7 +16,7 @@
 import Card from '@/components/card/Card.vue'
 import CardList from '@/components/card/CardList.vue'
 import Header from '@/views/shared/header/Header.vue'
-import { useMonumentStore } from '@/stores/sightStore'
+import { useMonumentStore } from '@/stores/memorialStore'
 import Search from '@/views/shared/search/Search.vue'
 import { useSearch } from '@/views/shared/composables/useSearch'
 

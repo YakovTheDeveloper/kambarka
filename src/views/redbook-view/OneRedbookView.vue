@@ -2,11 +2,7 @@
     <div class="container-bg container-padding container-bg-blur-2">
         <Header title="Красная книга Камбарского района" />
         <div class="content">
-            <Slider :photos="[
-                { id: 1, src: '/images/games/memory/card.png', title: '13' },
-                { id: 2, src: '/images/games/memory/card.png', title: '14' },
-                { id: 3, src: '/images/games/memory/card.png', title: '15' },
-            ]" />
+            <Slider :photos="store.routeIdData?.redBookImages || []" :title="store.routeIdData?.title" />
             <div class="content-desc">
                 <Space value="50" />
                 <ItemDescription :items="store.routeIdData?.redBookInfo" />

@@ -34,7 +34,7 @@ import Space from '@/components/space/Space.vue'
 import DocumentIcon from '@/components/icons/DocumentIcon.vue'
 import MonumentDocuments from './MonumentDocuments.vue'
 import { computed, onMounted, ref } from 'vue'
-import { useMonumentStore } from '@/stores/sightStore'
+import { useMonumentStore } from '@/stores/memorialStore'
 
 const store = useMonumentStore()
 const currentDocument = ref<number | null>(0)

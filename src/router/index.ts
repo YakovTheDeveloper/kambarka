@@ -22,6 +22,7 @@ import HabitatView from '@/views/habitat-view/HabitatView.vue'
 import OneRedbookView from '@/views/redbook-view/OneRedbookView.vue'
 import RedbookView from '@/views/redbook-view/RedbookView.vue'
 import PuzzleGameFinish from '@/views/games-view/puzzle-game-view/PuzzleGameFinish.vue'
+import OneSightView from '@/views/sights-view/OneSightView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,6 +106,11 @@ const router = createRouter({
       path: '/sights',
       name: 'sights',
       component: SightsView,
+    },
+    {
+      path: '/sights/:id',
+      name: 'sights/:id',
+      component: OneSightView,
     },
     {
       path: '/habitat/:id',

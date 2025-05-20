@@ -2,47 +2,30 @@
   <div class="container-padding container-bg-blur">
     <Header :hasBackButton="true" :has-home-button="true" title="Найди отличия"></Header>
     <div class="cards">
-      <div
-        class="cards-card"
-        :style="{
-          backgroundImage: `url(${cards[0]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }"
-      >
-        <span
-          @click="() => onClick(index)"
-          v-for="(mark, index) in solutionMarks"
-          :key="index"
-          class="mark"
-          :style="{
-            position: 'absolute',
-            top: `${mark.y}px`,
-            left: `${mark.x}px`,
-            opacity: foundIndices.includes(index) ? '1' : '0',
-          }"
-        />
+      <div class="cards-card" :style="{
+        backgroundImage: `url(${cards[0]})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }">
+        <span @click="() => onClick(index)" v-for="(mark, index) in solutionMarks" :key="index" class="mark" :style="{
+          position: 'absolute',
+          top: `${mark.y}px`,
+          left: `${mark.x}px`,
+          opacity: foundIndices.includes(index) ? '1' : '0',
+        }" />
       </div>
-      <div
-        class="cards-card"
-        :style="{
-          backgroundImage: `url(${cards[1]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }"
-      >
-        <span
-          @click="() => onClick(index)"
-          v-for="(mark, index) in solutionMarks"
-          :key="index"
-          class="mark mark_second"
+      <div class="cards-card" :style="{
+        backgroundImage: `url(${cards[1]})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }">
+        <span @click="() => onClick(index)" v-for="(mark, index) in solutionMarks" :key="index" class="mark mark_second"
           :style="{
             position: 'absolute',
             top: `${mark.y}px`,
             left: `${mark.x}px`,
             opacity: foundIndices.includes(index) ? '1' : '0',
-          }"
-        />
+          }" />
       </div>
     </div>
   </div>

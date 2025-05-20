@@ -241,3 +241,17 @@ export type MemoryGameData = {
     image: string
   }[]
 }
+export type Sight = {
+  id: number,
+  title: string,
+  type: string,
+  name: string,
+  simpleName: string,
+  status: string,
+  history: string,
+  nowadays: string,
+  image: {
+    id: number,
+    image: string
+  }[]
+}

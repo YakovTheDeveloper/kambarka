@@ -34,8 +34,8 @@ const router = useRouter()
             </div>
           </div>
         </div>
-        <div class="radius bg-alpha col padding red-book">
-          <div @click="router.push('/redbook')" class="image-box" :style="{
+        <div class="radius bg-alpha col padding red-book" @click="router.push('/redbook')">
+          <div class="image-box" :style="{
             background: `url(${getServerImageUrl(sections[3]?.image)}) center/cover no-repeat`,
             height: '804px',
           }"></div>

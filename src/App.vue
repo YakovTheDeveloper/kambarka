@@ -3,7 +3,7 @@ import { useGameStore } from '@/stores/gameStore';
 import { useHabitatData } from '@/stores/habitatStore';
 import { useHomeStore } from '@/stores/homeStore';
 import { useRedBookStore } from '@/stores/redbookStore';
-import { useMonumentStore } from '@/stores/sightStore';
+import { useMonumentStore } from '@/stores/memorialStore';
 import { useInactivityTimer, useSleepingModeStore } from '@/stores/sleepingModeStore';
 import WaitingMode from '@/views/shared/waiting-mode/WaitingMode.vue';
 import { onMounted } from 'vue';
