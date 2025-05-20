@@ -232,3 +232,12 @@ export type Memorial = {
   }[]
 
 }
+
+export type MemoryGameData = {
+  id: number
+  level: string
+  memoryImages: {
+    id: number
+    image: string
+  }[]
+}

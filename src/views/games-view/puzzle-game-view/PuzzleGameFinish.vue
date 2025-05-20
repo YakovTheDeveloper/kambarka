@@ -1,7 +1,8 @@
 <template>
-    <GameFinish current-game-link="/games/puzzle" class="container-bg-wood">
-
-        <img :src="baseImagenh" alt="">
+    <GameFinish current-game-link="/games/puzzle-difficulty" class="container-bg-wood" :side-buttons="true">
+        <div class="result">
+            <img :src="baseImage" alt="">
+        </div>
     </GameFinish>
 </template>
 
@@ -19,4 +20,18 @@ const baseImage = computed(() => {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.result {
+    width: 1820px;
+    height: 1820px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 60px;
+    padding: 40px;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+
+}
+</style>

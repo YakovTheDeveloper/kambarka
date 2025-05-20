@@ -3,12 +3,12 @@
     <Header title="Мемори" :has-back-button="true" :has-home-button="true"></Header>
     <Space :value="headerSpace" />
     <div class="cards" :style="gridStyle">
-      <div
-        class="card"
-        v-for="card in cards"
-        :style="getOpenedCardStyle(card.id)"
-        @click="onCardClick(card)"
-      ></div>
+      <div class="card" :key="card.id" v-for="card in cards" @click="onCardClick(card)">
+        <div class="card-inner" :class="{ flipped: isCardOpened(card.id) }">
+          <div class="card-front"></div>
+          <div class="card-back" :style="getOpenedCardStyle(card.id, card.image)"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -16,9 +16,13 @@
 <script setup lang="ts">
 import Header from '@/views/shared/header/Header.vue'
 import { useGetDifficulty } from '../composables/useGetDifficulty'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 import Space from '@/components/space/Space.vue'
 import { useRouter } from 'vue-router'
+import { useGameStore } from '@/stores/gameStore'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
+
+
 
 const difficultyStore = useGetDifficulty()
 
@@ -31,20 +35,21 @@ const gridStyle = computed(() => {
   return gridConfig[difficultyStore.difficulty.value] || {}
 })
 
+
+const store = useGameStore()
+
+onMounted(() => {
+  store.fetchMemory(difficultyStore.difficulty.value)
+})
+
 const cards = computed(() => {
-  const config = {
-    1: [
-      { id: 1, variant: 1 },
-      { id: 2, variant: 1 },
-      { id: 3, variant: 3 },
-      { id: 4, variant: 2 },
-      { id: 5, variant: 2 },
-      { id: 6, variant: 3 },
-    ],
-    2: new Array(12).fill(' '),
-    3: new Array(24).fill(' '),
-  }
-  return config[difficultyStore.difficulty.value] || {}
+  const initCards = store.memoryDifficultyToImages[difficultyStore.difficulty.value]?.memoryImages
+  if (!initCards) return []
+  const doubled = initCards.flatMap((el, idx) => [
+    { id: `${idx * 2 + 1}`, image: el.image },
+    { id: `${idx * 2 + 2}`, image: el.image }
+  ])
+  return doubled
 })
 
 const headerSpace = computed(() => {
@@ -55,16 +60,30 @@ const headerSpace = computed(() => {
   }
   return config[difficultyStore.difficulty.value]
 })
+const isCardOpened = (id: string) => {
+  return cardsToShow.value.some((card) => card.id === id)
+}
 
-const getOpenedCardStyle = (id: string) => {
+
+const getOpenedCardStyle = (id: string, image: string) => {
   if (cardsToShow.value.some((card) => card.id === id)) {
     return {
-      background: 'red',
+      background: `url(${getServerImageUrl(image)}) center no-repeat`,
     }
   }
   return {}
 }
-type Card = { id: string; variant: string }
+
+// const getOpenedCardStyle = (id: string, image: string) => {
+//   if (cardsToShow.value.some((card) => card.id === id)) {
+//     return {
+//       background: url(${ getServerImageUrl(image) }) center no- repeat,
+//     }
+// }
+// return {}
+// }
+
+type Card = { id: string; image: string }
 const currentTurn = ref<Card[]>([])
 const lock = ref(false)
 
@@ -78,7 +97,7 @@ const onCardClick = (card: any) => {
 
 watchEffect(() => {
   if (currentTurn.value.length === 2) {
-    if (currentTurn.value[0].variant === currentTurn.value[1].variant) {
+    if (currentTurn.value[0].image === currentTurn.value[1].image) {
       currentTurn.value = []
       return
     }
@@ -96,8 +115,11 @@ watchEffect(() => {
 const router = useRouter()
 
 watchEffect(() => {
+  if (cardsToShow.value.length === 0 || cards.value.length === 0) return
   if (cardsToShow.value.length === cards.value.length) {
-    router.push('/games/memory/finish')
+    setTimeout(() => {
+      router.push('/games/memory/finish')
+    }, 1000)
   }
 })
 </script>
@@ -110,7 +132,46 @@ watchEffect(() => {
 }
 
 .card {
-  background: url('/images/games/memory/card.png') center no-repeat;
-  background-size: cover;
+  border-radius: 60px;
+  overflow: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+
+  &-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); // smoother easing
+    will-change: transform;
+
+    &.flipped {
+      transform: rotateY(180deg);
+    }
+  }
+
+  &-front,
+  &-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border: 1px solid #ccc;
+    border-radius: 60px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+  }
+
+  &-front {
+    background: url('/images/games/memory/card.png') center no-repeat;
+    background-size: cover;
+    /* Or a back design */
+  }
+
+  &-back {
+    transform: rotateY(180deg);
+    background-size: cover;
+    background-position: center;
+  }
 }
 </style>
