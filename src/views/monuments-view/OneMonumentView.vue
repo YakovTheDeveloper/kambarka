@@ -2,18 +2,12 @@
   <div class="container-bg container-padding container-bg-blur-2">
     <Header title="Памятники природы" />
     <div class="content">
-      <Slider
-        :photos="[
-          { id: 1, src: '/images/games/memory/card.png', title: '13' },
-          { id: 2, src: '/images/games/memory/card.png', title: '14' },
-          { id: 3, src: '/images/games/memory/card.png', title: '15' },
-        ]"
-      />
+      <Slider :photos="store.routeIdData?.memorialNatureImages || []" :title="store.routeIdData?.title" />
       <div class="content-desc">
         <Tabs :tabs="tabs" ref="tabsRef">
           <template #main>
             <Space value="50" />
-            <ItemDescription :items="items" />
+            <ItemDescription :items="textContent" />
           </template>
           <template #another>
             <Space value="50" />
@@ -30,6 +24,7 @@
   </teleport>
 </template>
 
+
 <script setup lang="ts">
 import Slider from '@/components/slider/Slider.vue'
 import Header from '../shared/header/Header.vue'
@@ -38,40 +33,47 @@ import Tabs from '@/components/tabs/Tabs.vue'
 import Space from '@/components/space/Space.vue'
 import DocumentIcon from '@/components/icons/DocumentIcon.vue'
 import MonumentDocuments from './MonumentDocuments.vue'
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useMonumentStore } from '@/stores/sightStore'
 
+const store = useMonumentStore()
+const currentDocument = ref<number | null>(0)
 const tabs = [
   { value: 'main', label: 'Основная информация' },
   { value: 'another', label: 'Дополнительно' },
 ]
 
-const items = [
-  {
-    id: 1,
-    title: 'Название',
-    description: 'Памятник природы регионального значения "Урочище "Валяй"',
-  },
-  {
-    id: 2,
-    title: 'Статус',
-    description:
-      'Урочище "Валяй" объявлено памятником природы постановлением Совета Министров Удмуртской АССР от 8 августа 1988 года N 238 "О признании памятниками природы природных достопримечательностей Удмуртской АССР"',
-  },
-  {
-    id: 3,
-    title: 'Расположение',
-    description:
-      'Расположено урочище на землях Камбарского лесничества и занимает площадь около 882,02 га',
-  },
-  {
-    id: 4,
-    title: 'Описание',
-    description:
-      'Урочище валяй - уникальный лес в Камбарском районе. Располагается на границе южной тайги, хвойно-лиственных лесов и северной лесостепи. Отсюда и биологическое разнообразие. Здесь можно встретить 87 редких и исчезающих видов растений, 3 вида редких грибов и 24 вида редких исчезающих животных. Здесь растут сосны которые  в диаметре достигают 180 см., кедры.',
-  },
-]
+onMounted(() => {
+  store.fetchOne()
+})
 
-const currentDocument = ref(0)
+const textContent = computed(() => {
+  if (!store.routeIdData) return []
+  const { description = '', place = '', name = '', status = '' } = store.routeIdData
+  return [
+    {
+      id: 1,
+      title: 'Название',
+      description: name
+    },
+    {
+      id: 2,
+      title: 'Статус',
+      description: status
+    },
+    {
+      id: 3,
+      title: 'Расположение',
+      description: place
+    },
+    {
+      id: 4,
+      title: 'Описание',
+      description: description
+    },
+  ]
+})
+
 </script>
 
 <style scoped lang="scss">

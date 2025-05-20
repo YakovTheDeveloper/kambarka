@@ -1,29 +1,29 @@
 <template>
   <div class="container-bg container-padding">
-    <Header title="Памятники природы"></Header>
+    <Header title="Памятники природы">
+      <Search :value="query" @change="onChange" />
+    </Header>
     <div class="bg-alpha content">
-      <Tabs :tabs="tabs" />
       <CardList>
-        <Card v-for="card in 30" img="" title="asdasd"></Card>
+        <Card v-for="card in filtered" :img="card.image" :title="card.title" :key="card.id" category="monuments"
+          :id="card.id" />
       </CardList>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import Card from '@/components/card/Card.vue'
-import Tabs from '@/components/tabs/Tabs.vue'
 import CardList from '@/components/card/CardList.vue'
 import Header from '@/views/shared/header/Header.vue'
+import { useMonumentStore } from '@/stores/sightStore'
+import Search from '@/views/shared/search/Search.vue'
+import { useSearch } from '@/views/shared/composables/useSearch'
 
-const currentTab = ref('')
+const store = useMonumentStore()
 
-const tabs = [
-  { value: 'Религиозные сооружения' },
-  { value: 'Объекты музейного показа' },
-  { value: 'Природные места' },
-]
+const { filtered, query, onChange } = useSearch(store.data)
+
 </script>
 
 <style scoped lang="scss">

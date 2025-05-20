@@ -5,72 +5,38 @@
     <div class="row">
       <div class="puzzle-pieces"></div>
 
-      <div
-        class="puzzle-frame"
-        :style="{
-          // backgroundImage: `url('/images/games/puzzle/frame.png')`,
-          // backgroundSize: 'cover',
-          // backgroundPosition: 'center',
-        }"
-      >
+      <div class="puzzle-frame" :style="{
+        // backgroundImage: `url('/images/games/puzzle/frame.png')`,
+        // backgroundSize: 'cover',
+        // backgroundPosition: 'center',
+      }">
         <img :src="gridImage" alt="" class="puzzle-grid" :draggable="false" />
-        <img
-          :src="baseImage"
-          alt=""
-          class="puzzle-image"
-          ref="puzzleImageRef"
-          @click="handleClick"
-        />
+        <img :src="baseImage" alt="" class="puzzle-image" ref="puzzleImageRef" @click="handleClick" />
       </div>
       <div class="puzzle-pieces">
         <template v-for="(piece, index) in pieces" :key="index">
-          <span
-            v-if="piece.show"
-            :id="getGridItemId(piece.row, piece.col)"
-            :style="{
-              position: 'absolute',
-              zIndex: 2,
-              transform: `translate(${piece.x}px, ${piece.y}px)`,
-            }"
-            @touchstart.prevent="startDrag(index, $event)"
-            @touchmove.prevent="onDrag($event)"
-            @touchend.prevent="endDrag"
-            @mousedown.prevent="startDrag(index, $event)"
-            @mousemove.prevent="onDrag($event)"
-            @mouseup.prevent="endDrag"
-          >
-            <PuzzlePiece
-              :backgroundPosition="piece.backgroundPosition"
-              :key="index"
-              :row="piece.row"
-              :col="piece.col"
-              :size="pieceSize"
-              :imageUrl="baseImage"
-              :gridSize="gridSize"
-              :shapeIndex="index + 1"
-            />
+          <span v-if="piece.show" :id="getGridItemId(piece.row, piece.col)" :style="{
+            position: 'absolute',
+            zIndex: 2,
+            transform: `translate(${piece.x}px, ${piece.y}px)`,
+          }" @touchstart.prevent="startDrag(index, $event)" @touchmove.prevent="onDrag($event)"
+            @touchend.prevent="endDrag" @mousedown.prevent="startDrag(index, $event)"
+            @mousemove.prevent="onDrag($event)" @mouseup.prevent="endDrag">
+            <PuzzlePiece :backgroundPosition="piece.backgroundPosition" :key="index" :row="piece.row" :col="piece.col"
+              :size="pieceSize" :imageUrl="baseImage" :gridSize="gridSize" :shapeIndex="index + 1" />
           </span>
         </template>
       </div>
       <template v-for="(piece, index) in pieces" :key="index">
-        <span
-          :style="{
-            left: `${pos[index].x}px`,
-            top: `${pos[index].y}px`,
-            position: 'absolute',
-            zIndex: 2,
-            display: puzzlesIds.includes(getGridItemId(piece.row, piece.col)) ? 'block' : 'none',
-          }"
-        >
-          <PuzzlePiece
-            :backgroundPosition="piece.backgroundPosition"
-            :key="index"
-            :row="piece.row"
-            :col="piece.col"
-            :imageUrl="baseImage"
-            :gridSize="gridSize"
-            :shapeIndex="index + 1"
-          />
+        <span :style="{
+          left: `${pos[index].x}px`,
+          top: `${pos[index].y}px`,
+          position: 'absolute',
+          zIndex: 2,
+          display: puzzlesIds.includes(getGridItemId(piece.row, piece.col)) ? 'block' : 'none',
+        }">
+          <PuzzlePiece :backgroundPosition="piece.backgroundPosition" :key="index" :row="piece.row" :col="piece.col"
+            :imageUrl="baseImage" :gridSize="gridSize" :shapeIndex="index + 1" />
         </span>
       </template>
     </div>
@@ -81,10 +47,14 @@
 import Space from '@/components/space/Space.vue'
 import Header from '@/views/shared/header/Header.vue'
 import PuzzlePiece from './PuzzlePiece.vue'
-import { computed, nextTick, onMounted, ref, type Ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watchEffect, type Ref } from 'vue'
 import { usePuzzleSections } from './composables/PuzzleSections'
 import { initPuzzlePositions, pos } from './data'
 import { useMovable } from './composables/useMovable'
+import { useGameStore } from '@/stores/gameStore'
+import { useGetDifficulty } from '@/views/games-view/composables/useGetDifficulty'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import { useRouter } from 'vue-router'
 
 const puzzlesToOpen = ref<Record<string, boolean>>({})
 const puzzlesIds = computed(() => Object.keys(puzzlesToOpen.value))
@@ -95,21 +65,25 @@ const addSolvedPuzzleId = (row: number, col: number) => {
     [getGridItemId(row, col)]: true,
   }
 }
-
+const router = useRouter()
 const gridSize = 6
 const pieceSize = 320
-const baseImage = '/images/games/puzzle/mock.png'
+const store = useGameStore()
+const difficulty = useGetDifficulty()
+const baseImage = computed(() => {
+  return getServerImageUrl(store.puzzleImages[difficulty.difficulty.value - 1]?.image)
+})
+watchEffect(() => console.log(baseImage.value))
 const gridImage = '/images/games/puzzle/grid.svg'
 const puzzleImageRef = ref()
 
-const { gridSections, updateSectionsFromElement, getSectionFromScreenPoint } = usePuzzleSections()
+const { updateSectionsFromElement, getSectionFromScreenPoint } = usePuzzleSections()
 const getGridItemId = (x, y) => {
   return `${x}/${y}`
 }
 onMounted(() => {
   nextTick(() => {
     updateSectionsFromElement(puzzleImageRef.value)
-    console.log(`output->gridSections`, gridSections.value)
   })
 })
 
@@ -143,6 +117,15 @@ const removePuzzleFromUserCollection = (draggingIndex: Ref<number>) => {
     return item
   })
 }
+
+watchEffect(() => {
+  if (Object.keys(puzzlesToOpen.value).length === 1) {
+    router.push(`/games/puzzle/finish?difficulty=${difficulty.difficulty.value}`)
+  }
+  if (Object.keys(puzzlesToOpen.value).length === pieces.value.length) {
+    router.push(`/games/puzzle/finish?difficulty=${difficulty.difficulty.value}`)
+  }
+})
 
 // const removePuzzleFromUserCollection = (draggingIndex: Ref<number>,x:number,y:number) => {
 //   pieces.value = pieces.value.map((item, index) => {

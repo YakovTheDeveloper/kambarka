@@ -1,18 +1,12 @@
 <template>
   <div class="gallery">
-    <swiper
-      :modules="modules"
-      :pagination="true"
-      :navigation="{
-        nextEl: nextElRef,
-        prevEl: prevElRef,
-      }"
-      class="swiper-main"
-      @slideChange="onSlideChange"
-    >
-      <swiper-slide v-for="{ id, src } in props.photos" :key="id" class="swiper-main-item">
-        <img :src="src" class="swiper-main-item-bg" />
-        <img :src="src" class="swiper-main-item-img" />
+    <swiper :modules="modules" :pagination="true" :navigation="{
+      nextEl: nextElRef,
+      prevEl: prevElRef,
+    }" class="swiper-main" @slideChange="onSlideChange">
+      <swiper-slide v-for="{ id, image } in props.photos" :key="id" class="swiper-main-item">
+        <img :src="getServerImageUrl(image)" class="swiper-main-item-bg" />
+        <img :src="getServerImageUrl(image)" class="swiper-main-item-img" />
       </swiper-slide>
 
       <template #container-end>
@@ -28,7 +22,7 @@
         </button>
       </template>
     </swiper>
-    <p class="gallery-title">{{ currentTitle }}</p>
+    <p class="gallery-title">{{ title }}</p>
   </div>
 </template>
 
@@ -38,12 +32,14 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import ArrowLeftIcon from '../icons/ArrowLeftIcon.vue'
 import ArrowRightIcon from '../icons/ArrowRightIcon.vue'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
 
 const props = defineProps<{
-  photos: { id: number; src: string; title: string }[]
+  photos: { id: number; image: string }[]
+  title: string
 }>()
 
 const prevElRef = ref<HTMLElement | null>(null)
@@ -51,7 +47,6 @@ const nextElRef = ref<HTMLElement | null>(null)
 const modules = [Navigation, Pagination]
 
 const activeIndex = ref(0)
-const currentTitle = computed(() => props.photos[activeIndex.value]?.title || '')
 
 function onSlideChange(swiper: any) {
   activeIndex.value = swiper.activeIndex
@@ -122,6 +117,7 @@ function onSlideChange(swiper: any) {
   &-item {
     position: relative;
     overflow: hidden;
+
     &-bg {
       position: absolute;
       inset: 0;
@@ -190,6 +186,7 @@ function onSlideChange(swiper: any) {
 .swiper-button-next,
 .swiper-button-prev {
   background-color: transparent;
+
   &:after {
     display: none;
   }

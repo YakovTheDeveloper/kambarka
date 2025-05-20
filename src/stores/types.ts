@@ -179,3 +179,56 @@ export type Habitat = {
     habitat: 'string'
   }
 }
+
+export type Preview = {
+  "id": 0,
+  "title": string,
+  image: string
+}
+
+
+export type Redbook = {
+  "id": number,
+  "title": string,
+  "redBookInfo":
+  {
+    "id": number,
+    "title": string,
+    "description": string,
+    "redBook": string
+  }[]
+  ,
+  "redBookImages":
+  {
+    "id": number,
+    "imageFile": string,
+    "image": string,
+    "redBook": string
+  }[]
+
+}
+
+export type Memorial = {
+  "id": number,
+  "title": string,
+  "name": string,
+  "status": string,
+  "place": string,
+  "description": string,
+  "memorialNatureImages":
+  {
+    "id": number,
+    "imageFile": string,
+    "image": string,
+    "memorial": string
+  }[]
+  ,
+  "memorialNatureMedia":
+  {
+    "id": number,
+    "mediaFile": string,
+    "media": string,
+    "memorial": string
+  }[]
+
+}

@@ -7,7 +7,9 @@
     <button class="button button_home" v-if="props.hasHomeButton" @click="router.push('/')">
       <HomeButtonIcon />
     </button>
-    <slot></slot>
+    <div v-if="$slots.default" class="right">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -46,6 +48,7 @@ h1 {
   margin-bottom: 40px;
   height: 160px;
 }
+
 .button {
   border-radius: 60px;
   overflow: hidden;
@@ -53,5 +56,9 @@ h1 {
   &_home {
     margin-left: auto;
   }
+}
+
+.right {
+  margin-left: auto;
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="description scrollbar scrollbar_white">
     <template v-for="item in items">
       <div class="col" v-if="columnNames.includes(item.title.toLowerCase())">
         <span class="title">{{ item.title }}</span>
-        <span class="desc">{{ item.description }}</span>
+        <span class="desc" v-html="item.description"></span>
       </div>
       <div class="row" v-else>
         <span class="title">{{ item.title }}</span>
-        <span class="desc">{{ item.description }}</span>
+        <span class="desc" v-html="item.description"></span>
       </div>
     </template>
   </div>
@@ -21,6 +21,10 @@ const columnNames = ['описание']
 </script>
 
 <style scoped lang="scss">
+.description {
+  max-height: 1580px;
+}
+
 .row {
   display: grid;
   grid-template-columns: 882px 1fr;

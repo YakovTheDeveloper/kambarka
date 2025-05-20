@@ -47,27 +47,18 @@ const router = useRouter()
         <div class="radius bg-alpha col padding">
           <h2 class="section-title">Среда обитания</h2>
           <div class="areal-cards row jcsb">
-            <div
-              v-for="card in arealCards"
-              @click="router.push(card.to)"
-              :key="card.title"
-              class="areal-card"
-              :style="{
-                background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${card.image}') center/cover no-repeat`,
-              }"
-            >
+            <div v-for="card in arealCards" @click="router.push(card.to)" :key="card.title" class="areal-card" :style="{
+              background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${card.image}') center/cover no-repeat`,
+            }">
               <div class="areal-card-title">{{ card.title }}</div>
             </div>
           </div>
         </div>
         <div class="radius bg-alpha col padding red-book">
-          <div
-            class="image-box"
-            :style="{
-              background: `url('/images/home/4.png') center/cover no-repeat`,
-              height: '804px',
-            }"
-          ></div>
+          <div @click="router.push('/redbook')" class="image-box" :style="{
+            background: `url('/images/home/4.png') center/cover no-repeat`,
+            height: '804px',
+          }"></div>
           <div class="row">
             <h2 class="section-title section-title_small">Красная книга Камбарского района</h2>
             <button class="button">Подробнее</button>
@@ -75,11 +66,8 @@ const router = useRouter()
         </div>
       </div>
       <div class="second">
-        <div
-          v-for="{ icon, titleHTML, to } in menuCards"
-          class="radius col padding second-card"
-          @click="router.push(to)"
-        >
+        <div v-for="{ icon, titleHTML, to } in menuCards" class="radius col padding second-card"
+          @click="router.push(to)">
           <component :is="icon"></component>
           <p v-html="titleHTML" />
         </div>
@@ -91,6 +79,7 @@ const router = useRouter()
 <style scoped lang="scss">
 .red-book {
   justify-content: space-between;
+
   .row {
     display: grid;
     grid-template-columns: 60% 1fr;
@@ -101,12 +90,14 @@ const router = useRouter()
     }
   }
 }
+
 .content {
   padding: 128px 0;
   display: flex;
   gap: 40px;
   flex-direction: column;
 }
+
 .button {
   display: flex;
   flex-direction: row;
@@ -127,9 +118,11 @@ const router = useRouter()
   order: 1;
   flex-grow: 0;
 }
+
 .col {
   gap: 40px;
 }
+
 .padding {
   padding: 40px;
 }
@@ -207,9 +200,7 @@ const router = useRouter()
   }
 }
 
-.image-box {
-}
+.image-box {}
 
-.icon-box {
-}
+.icon-box {}
 </style>
