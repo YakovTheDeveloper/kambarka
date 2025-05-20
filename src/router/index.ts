@@ -16,6 +16,8 @@ import PuzzleGameDifficulty from '@/views/games-view/puzzle-game-view/PuzzleGame
 import GeoInfoView from '@/views/geo-info-view/GeoInfoView.vue'
 import MonumentsView from '@/views/monuments-view/MonumentsView.vue'
 import OneMonumentView from '@/views/monuments-view/OneMonumentView.vue'
+import PuzzleGameView from '@/views/games-view/puzzle-game-view/PuzzleGameView.vue'
+import PuzzleGame2 from '@/views/games-view/puzzle-game-view/PuzzleGame2.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,7 +85,12 @@ const router = createRouter({
     {
       path: '/games/puzzle',
       name: 'games/puzzle',
-      component: PuzzleGameDifficulty,
+      component: PuzzleGameView,
+    },
+    {
+      path: '/games/puzzle2',
+      name: 'games/puzzle2',
+      component: PuzzleGame2,
     },
     {
       path: '/games/puzzle/finish',
