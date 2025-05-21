@@ -1,6 +1,6 @@
 <template>
   <div class="container-bg container-padding">
-    <Header title="Игры в музее" />
+    <Header title="Игры в музее" @back="router.push('/')" />
     <div class="cards">
       <div v-for="{ img, title, to } in cards" class="card" @click="router.push(to)">
         <h2>{{ title }}</h2>

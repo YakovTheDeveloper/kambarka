@@ -2,7 +2,7 @@
   <div class="container-bg-blur container-padding">
     <Header :has-back-button="true" title="Географическая справка" />
     <div class="content">
-      <img src="/images/geo-info/map.png" alt="" class="map" :draggable="false" />
+      <img :src="getServerImageUrl(geographyData?.image)" alt="" class="map" :draggable="false" />
       <div v-html="geographyData?.description"></div>
     </div>
   </div>
@@ -13,6 +13,7 @@ import Header from '../shared/header/Header.vue'
 
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
 
 const geographyData = ref(null)
 

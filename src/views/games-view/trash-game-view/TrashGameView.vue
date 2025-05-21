@@ -1,33 +1,17 @@
 <template>
-  <div
-    class="container-bg-blur container-padding"
-    ref="containerRef"
-    :style="{ overflow: 'hidden' }"
-  >
+  <div class="container-bg-blur container-padding" ref="containerRef"
+    :style="{ overflow: 'hidden', position: 'relative' }">
+    <Header title="Экология" :hasHomeButton="true" class="header" />
     <div class="trash-container">
-      <img
-        v-for="(item, index) in store.currentItems.value"
-        :key="index"
-        :src="item.src"
-        :style="{
-          transform: 'translate(' + item.x + 'px, ' + item.y + 'px)',
-          position: 'absolute',
-          zIndex: 2,
-        }"
-        class="trash-item"
-        @touchstart.prevent="startDrag(index, $event)"
-        @touchmove.prevent="onDrag($event)"
-        @touchend.prevent="endDrag"
-        @mousedown.prevent="startDrag(index, $event)"
-        @mousemove.prevent="onDrag($event)"
-        @mouseup.prevent="endDrag"
-      />
-      <TrashGameBin
-        v-for="bin in store.currentBins.value"
-        :bin="bin"
-        :binsToOpen="binsToOpen"
-        :currentItems="store.currentItems.value"
-      />
+      <img v-for="(item, index) in store.currentItems.value" :key="index" :src="item.src" :style="{
+        transform: 'translate(' + item.x + 'px, ' + item.y + 'px)',
+        position: 'absolute',
+        zIndex: 2,
+      }" class="trash-item" @touchstart.prevent="startDrag(index, $event)" @touchmove.prevent="onDrag($event)"
+        @touchend.prevent="endDrag" @mousedown.prevent="startDrag(index, $event)" @mousemove.prevent="onDrag($event)"
+        @mouseup.prevent="endDrag" />
+      <TrashGameBin v-for="bin in store.currentBins.value" :bin="bin" :binsToOpen="binsToOpen"
+        :currentItems="store.currentItems.value" />
     </div>
   </div>
 </template>
@@ -37,6 +21,7 @@ import { ref, onMounted, computed, watchEffect } from 'vue'
 import TrashGameBin from './TrashGameBin.vue'
 import { levelToBins, levelToItems } from './config'
 import { useGameState } from './state'
+import Header from '@/views/shared/header/Header.vue'
 
 const containerRef = ref<HTMLElement | null>(null)
 const store = useGameState()
@@ -150,6 +135,13 @@ watchEffect(() => {
 </script>
 
 <style scoped>
+.header {
+  position: absolute;
+  width: calc(100% - 160px);
+  left: 80px;
+  top: 80px;
+}
+
 .trash-container {
   position: relative;
   display: flex;

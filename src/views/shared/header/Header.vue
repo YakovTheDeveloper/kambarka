@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <button class="button" v-if="props.hasBackButton" @click="router.back()">
+    <button class="button" v-if="props.hasBackButton" @click="onBack">
       <BackButtonIcon />
     </button>
     <h1>{{ $props.title }}</h1>
@@ -25,12 +25,22 @@ const props = withDefaults(
     title?: string
     hasHomeButton?: boolean
     hasBackButton?: boolean
+    onBack?: () => void
   }>(),
   {
     hasHomeButton: false,
     hasBackButton: true,
   },
 )
+
+const onBack = () => {
+  if (props.onBack) {
+    props.onBack()
+    return
+  }
+  router.back()
+}
+
 </script>
 
 <style scoped lang="scss">

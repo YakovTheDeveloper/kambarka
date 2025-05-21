@@ -119,9 +119,7 @@ const removePuzzleFromUserCollection = (draggingIndex: Ref<number>) => {
 }
 
 watchEffect(() => {
-  if (Object.keys(puzzlesToOpen.value).length === 1) {
-    router.push(`/games/puzzle/finish?difficulty=${difficulty.difficulty.value}`)
-  }
+
   if (Object.keys(puzzlesToOpen.value).length === pieces.value.length) {
     router.push(`/games/puzzle/finish?difficulty=${difficulty.difficulty.value}`)
   }
