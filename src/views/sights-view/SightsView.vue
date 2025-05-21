@@ -5,20 +5,20 @@
       <Tabs :tabs="tabs" ref="tabsRef">
         <template #religion>
           <CardList>
-            <Card v-for="card in store.religionData" :img="card.image" :title="card.title" :id="card.id"
+            <Card v-for="card in store.religionData" :img="card.image" :title="card.title" :id="card.id" :key="card.id"
               category="sights"></Card>
           </CardList>
         </template>
         <template #museum>
           <CardList>
-            <Card v-for="card in store.museumData" :img="card.image" :title="card.title" :id="card.id"
+            <Card v-for="card in store.museumData" :img="card.image" :title="card.title" :id="card.id" :key="card.id"
               category="sights"></Card>
           </CardList>
         </template>
         <template #naturePlace>
           <CardList>
             <Card v-for="card in store.naturePlaceData" :img="card.image" :title="card.title" :id="card.id"
-              category="sights"></Card>
+              :key="card.id" category="sights"></Card>
           </CardList>
         </template>
       </Tabs>
@@ -42,13 +42,8 @@ const tabs = [
   { value: 'naturePlace', label: 'Природные места' },
 ]
 
-// const store = useSightStore()
+const store = useSightStore()
 
-const store = {
-  religionData: [{ title: 'A', id: 1, img: '' }],
-  museumData: [{ title: 'B', id: 2, img: '' }],
-  naturePlaceData: [{ title: 'C', id: 3, img: '' }]
-}
 
 </script>
 

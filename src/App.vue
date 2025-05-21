@@ -8,6 +8,7 @@ import { useInactivityTimer, useSleepingModeStore } from '@/stores/sleepingModeS
 import WaitingMode from '@/views/shared/waiting-mode/WaitingMode.vue';
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router'
+import { useSightStore } from '@/stores/sightStore';
 
 
 const redbookStore = useRedBookStore()
@@ -15,6 +16,7 @@ const monumentStore = useMonumentStore()
 const gameStore = useGameStore()
 const habitatStore = useHabitatData()
 const homeStore = useHomeStore()
+const sightStore = useSightStore()
 
 
 useSleepingModeStore()
@@ -25,6 +27,7 @@ onMounted(() => {
   gameStore.fetchAll()
   habitatStore.fetchData()
   homeStore.fetchSections()
+  sightStore.fetchAll()
 })
 
 </script>

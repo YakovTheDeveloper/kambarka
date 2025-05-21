@@ -241,6 +241,9 @@ export type MemoryGameData = {
     image: string
   }[]
 }
+
+export type SightPreview = Preview & { type: 'religion' | 'museum' | 'naturePlace' }
+
 export type Sight = {
   id: number,
   title: string,
