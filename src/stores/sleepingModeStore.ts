@@ -6,42 +6,46 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useSleepingModeStore = defineStore('sleepingMode', () => {
-    const isVisible = ref(false)
+  const isVisible = ref(false)
 
-    const show = () => { isVisible.value = true }
-    const hide = () => { isVisible.value = false }
+  const show = () => {
+    isVisible.value = true
+  }
+  const hide = () => {
+    isVisible.value = false
+  }
 
-    useInactivityTimer()
+  useInactivityTimer()
 
-    return { isVisible, show, hide }
+  return { isVisible, show, hide }
 })
 
-export function useInactivityTimer(timeout = 30000) {
-    const sleepingStore = useSleepingModeStore()
-    let timer: ReturnType<typeof setTimeout>
+export function useInactivityTimer(timeout = 300000) {
+  const sleepingStore = useSleepingModeStore()
+  let timer: ReturnType<typeof setTimeout>
 
-    const reset = () => {
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-            sleepingStore.show()
-        }, timeout)
+  const reset = () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      sleepingStore.show()
+    }, timeout)
+  }
+
+  const activityEvents = ['touchstart', 'mousemove', 'keydown']
+  const handleActivity = () => {
+    if (sleepingStore.isVisible) {
+      // sleepingStore.hide()
     }
+    reset()
+  }
 
-    const activityEvents = ['touchstart', 'mousemove', 'keydown']
-    const handleActivity = () => {
-        if (sleepingStore.isVisible) {
-            // sleepingStore.hide()
-        }
-        reset()
-    }
+  onMounted(() => {
+    activityEvents.forEach((evt) => window.addEventListener(evt, handleActivity, { passive: true }))
+    reset()
+  })
 
-    onMounted(() => {
-        activityEvents.forEach(evt => window.addEventListener(evt, handleActivity, { passive: true }))
-        reset()
-    })
-
-    onUnmounted(() => {
-        activityEvents.forEach(evt => window.removeEventListener(evt, handleActivity))
-        clearTimeout(timer)
-    })
+  onUnmounted(() => {
+    activityEvents.forEach((evt) => window.removeEventListener(evt, handleActivity))
+    clearTimeout(timer)
+  })
 }

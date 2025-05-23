@@ -4,8 +4,7 @@
       <CrossIcon />
     </button>
     <div class="docs">
-      <div></div>
-      <div></div>
+      <PDFViewer v-if="content?.media" :pdfUrl="getServerImageUrl(content.media)" />
     </div>
 
     <div class="page-select" v-if="showPageSelect">
@@ -40,16 +39,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import ArrowLeftNavIcon from '@/components/icons/ArrowLeftNavIcon.vue'
 import ArrowRightNavIcon from '@/components/icons/ArrowRightNavIcon.vue'
 import BackspaceIcon from '@/components/icons/BackspaceIcon.vue'
 import CrossIcon from '@/components/icons/CrossIcon.vue'
 import CrossRoundIcon from '@/components/icons/CrossRoundIcon.vue'
+import PDFViewer from './PDFViewer2.vue'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
 
 const props = defineProps<{
   onClose: VoidFunction
+  content: { id: number; media: string }
 }>()
+
+const currentPdfLink = computed(() =>
+  props.content?.media ? getServerImageUrl(props.content?.media) : '',
+)
+
+watchEffect(() => {
+  console.log(`output->currentPdfLink`, currentPdfLink.value)
+})
 
 const keyboardKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 const inputValue = ref('')
@@ -91,9 +101,11 @@ const showPageSelect = ref(false)
   }
 }
 .docs {
-  display: grid;
-  grid-template-columns: repeat(2, 1256px);
-  grid-template-rows: 1792px;
+  width: 2502px;
+  height: 1792px;
+  // display: grid;
+  // grid-template-columns: repeat(2, 1256px);
+  // grid-template-rows: 1792px;
   gap: 48px;
   position: absolute;
   left: 50%;

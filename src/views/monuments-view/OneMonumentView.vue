@@ -2,7 +2,10 @@
   <div class="container-bg container-padding container-bg-blur-2">
     <Header title="Памятники природы" />
     <div class="content">
-      <Slider :photos="store.routeIdData?.memorialNatureImages || []" :title="store.routeIdData?.title" />
+      <Slider
+        :photos="store.routeIdData?.memorialNatureImages || []"
+        :title="store.routeIdData?.title"
+      />
       <div class="content-desc">
         <Tabs :tabs="tabs" ref="tabsRef">
           <template #main>
@@ -11,7 +14,11 @@
           </template>
           <template #another>
             <Space value="50" />
-            <div v-for="item in 2" class="additional-item" @click="currentDocument = item">
+            <div
+              v-for="item in store.routeIdData?.memorialNatureMedia || []"
+              class="additional-item"
+              @click="currentDocument = item"
+            >
               <DocumentIcon /> <span>Паспорт</span>
             </div>
           </template>
@@ -20,10 +27,13 @@
     </div>
   </div>
   <teleport to="body">
-    <MonumentDocuments v-show="currentDocument" @close="currentDocument = null" />
+    <MonumentDocuments
+      v-show="currentDocument"
+      @close="currentDocument = null"
+      :content="currentDocument"
+    />
   </teleport>
 </template>
-
 
 <script setup lang="ts">
 import Slider from '@/components/slider/Slider.vue'
@@ -37,7 +47,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useMonumentStore } from '@/stores/memorialStore'
 
 const store = useMonumentStore()
-const currentDocument = ref<number | null>(0)
+const currentDocument = ref<{ id: number; media: string } | null>(null)
 const tabs = [
   { value: 'main', label: 'Основная информация' },
   { value: 'another', label: 'Дополнительно' },
@@ -54,26 +64,25 @@ const textContent = computed(() => {
     {
       id: 1,
       title: 'Название',
-      description: name
+      description: name,
     },
     {
       id: 2,
       title: 'Статус',
-      description: status
+      description: status,
     },
     {
       id: 3,
       title: 'Расположение',
-      description: place
+      description: place,
     },
     {
       id: 4,
       title: 'Описание',
-      description: description
+      description: description,
     },
   ]
 })
-
 </script>
 
 <style scoped lang="scss">
