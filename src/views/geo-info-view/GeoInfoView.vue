@@ -3,7 +3,7 @@
     <Header :has-back-button="true" title="Географическая справка" />
     <div class="content">
       <img :src="getServerImageUrl(geographyData?.image)" alt="" class="map" :draggable="false" />
-      <div v-html="geographyData?.description"></div>
+      <div v-html="fixOrphanWordsInHTML(geographyData?.description)"></div>
     </div>
   </div>
 </template>
@@ -14,6 +14,7 @@ import Header from '../shared/header/Header.vue'
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import { fixOrphanWordsInHTML } from '@/utils/fixOrphanWords'
 
 const geographyData = ref(null)
 

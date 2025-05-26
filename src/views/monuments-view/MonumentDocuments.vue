@@ -4,14 +4,30 @@
       <CrossIcon />
     </button>
     <div class="docs">
-      <PDFViewer v-if="content?.media" :pdfUrl="getServerImageUrl(content.media)" />
+      <PDFViewer
+        ref="pdfReaderRef"
+        v-if="media?.type === 'document' && content.media"
+        :url="getServerImageMemorialUrl(content.media)"
+      />
     </div>
 
     <div class="page-select" v-if="showPageSelect">
-      <div class="row">
-        <button class="navigation-prev"><ArrowLeftNavIcon /></button>
+      <div class="row" v-if="pdfReaderRef">
+        <button
+          class="navigation-prev"
+          @click="pdfReaderRef?.handlePrev"
+          :disabled="pdfReaderRef.currentPage <= 1"
+        >
+          <ArrowLeftNavIcon />
+        </button>
         <input type="number" v-model="inputValue" />
-        <button class="navigation-next"><ArrowRightNavIcon /></button>
+        <button
+          class="navigation-next"
+          @click="pdfReaderRef?.handleNext"
+          :disabled="pdfReaderRef.currentPage + 1 > pdfReaderRef.numPages"
+        >
+          <ArrowRightNavIcon />
+        </button>
       </div>
       <div class="page-select-keyboard-container">
         <div class="page-select-keyboard">
@@ -29,11 +45,33 @@
         <CrossRoundIcon />
       </div>
     </div>
-
-    <div class="navigation" v-else>
-      <button class="navigation-prev"><ArrowLeftNavIcon /></button>
-      <button class="navigation-current-page" @click="showPageSelect = true">Страница</button>
-      <button class="navigation-next"><ArrowRightNavIcon /></button>
+    <div
+      class="navigation"
+      v-else-if="media?.type === 'document' && pdfReaderRef && pdfReaderRef.numPages > 2"
+    >
+      <button
+        class="navigation-prev"
+        @click="pdfReaderRef?.handlePrev"
+        :disabled="pdfReaderRef.currentPage <= 1"
+      >
+        <ArrowLeftNavIcon />
+      </button>
+      <button class="navigation-current-page" @click="showPageSelect = true">
+        Страницы {{ pdfReaderRef.currentPage }}
+        {{
+          pdfReaderRef.currentPage + 1 <= pdfReaderRef.numPages
+            ? ` – ${pdfReaderRef.currentPage + 1}`
+            : ''
+        }}
+        / {{ pdfReaderRef.numPages }}
+      </button>
+      <button
+        class="navigation-next"
+        @click="pdfReaderRef?.handleNext"
+        :disabled="pdfReaderRef.currentPage + 1 > pdfReaderRef.numPages"
+      >
+        <ArrowRightNavIcon />
+      </button>
     </div>
   </div>
 </template>
@@ -45,8 +83,9 @@ import ArrowRightNavIcon from '@/components/icons/ArrowRightNavIcon.vue'
 import BackspaceIcon from '@/components/icons/BackspaceIcon.vue'
 import CrossIcon from '@/components/icons/CrossIcon.vue'
 import CrossRoundIcon from '@/components/icons/CrossRoundIcon.vue'
-import PDFViewer from './PDFViewer2.vue'
-import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import PDFViewer from './PDFViewer.vue'
+import { getServerImageMemorialUrl, getServerImageUrl } from '@/utils/getServerImageUrl'
+import { getFileTypeFromUrl } from '@/utils/getFileTypeFromUrl'
 
 const props = defineProps<{
   onClose: VoidFunction
@@ -57,8 +96,22 @@ const currentPdfLink = computed(() =>
   props.content?.media ? getServerImageUrl(props.content?.media) : '',
 )
 
+const media = computed(() => {
+  if (!props.content) return null
+  return { ...props.content, type: getFileTypeFromUrl(props.content.media) }
+})
+
+const pdfReaderRef = ref<{
+  handleKeyboardInput: (val: string) => void
+  handlePrev: () => void
+  handleNext: () => void
+  numPages: number
+  currentPage: number
+}>()
+
 watchEffect(() => {
   console.log(`output->currentPdfLink`, currentPdfLink.value)
+  console.log(`output->media`, media.value)
 })
 
 const keyboardKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -73,7 +126,8 @@ const backspace = () => {
 }
 
 const submitInput = () => {
-  console.log('Entered value:', inputValue.value)
+  pdfReaderRef.value?.handleKeyboardInput(inputValue.value)
+  inputValue.value = ''
 }
 
 const showPageSelect = ref(false)
@@ -144,6 +198,13 @@ const showPageSelect = ref(false)
     justify-content: center;
     color: #4fa127;
   }
+
+  button {
+    &:disabled {
+      background-color: #fff;
+      opacity: 0.2;
+    }
+  }
 }
 
 .page-select {
@@ -165,6 +226,14 @@ const showPageSelect = ref(false)
     position: absolute;
     content: '';
     z-index: -1;
+  }
+
+  button {
+    background-color: #fff;
+    &:disabled {
+      background-color: #fff;
+      opacity: 0.2;
+    }
   }
 
   .row {

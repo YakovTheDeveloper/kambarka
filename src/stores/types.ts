@@ -181,56 +181,46 @@ export type Habitat = {
 }
 
 export type Preview = {
-  "id": 0,
-  "title": string,
+  id: 0
+  title: string
   image: string
 }
 
-
 export type Redbook = {
-  "id": number,
-  "title": string,
-  "redBookInfo":
-  {
-    "id": number,
-    "title": string,
-    "description": string,
-    "redBook": string
+  id: number
+  title: string
+  redBookInfo: {
+    id: number
+    title: string
+    description: string
+    redBook: string
   }[]
-  ,
-  "redBookImages":
-  {
-    "id": number,
-    "imageFile": string,
-    "image": string,
-    "redBook": string
+  redBookImages: {
+    id: number
+    imageFile: string
+    image: string
+    redBook: string
   }[]
-
 }
 
 export type Memorial = {
-  "id": number,
-  "title": string,
-  "name": string,
-  "status": string,
-  "place": string,
-  "description": string,
-  "memorialNatureImages":
-  {
-    "id": number,
-    "imageFile": string,
-    "image": string,
-    "memorial": string
+  id: number
+  title: string
+  name: string
+  status: string
+  place: string
+  description: string
+  memorialNatureImages: {
+    id: number
+    imageFile: string
+    image: string
+    memorial: string
   }[]
-  ,
-  "memorialNatureMedia":
-  {
-    "id": number,
-    "mediaFile": string,
-    "media": string,
-    "memorial": string
+  memorialNatureMedia: {
+    id: number
+    media: string
+    title: string
   }[]
-
 }
 
 export type MemoryGameData = {
@@ -245,16 +235,16 @@ export type MemoryGameData = {
 export type SightPreview = Preview & { type: 'religion' | 'museum' | 'naturePlace' }
 
 export type Sight = {
-  id: number,
-  title: string,
-  type: string,
-  name: string,
-  simpleName: string,
-  status: string,
-  history: string,
-  nowadays: string,
+  id: number
+  title: string
+  type: string
+  name: string
+  simpleName: string
+  status: string
+  history: string
+  nowadays: string
   image: {
-    id: number,
+    id: number
     image: string
   }[]
 }

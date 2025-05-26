@@ -3,7 +3,7 @@
     <template v-for="item in items">
       <div class="col" v-if="columnNames.includes(item.title.toLowerCase())">
         <span class="title">{{ item.title }}</span>
-        <span class="desc" v-html="item.description"></span>
+        <span class="desc" v-html="fixOrphanWordsInHTML(item.description)"></span>
       </div>
       <div class="row" v-else>
         <span class="title">{{ item.title }}</span>
@@ -14,6 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import { fixOrphanWordsInHTML } from '@/utils/fixOrphanWords'
+
 const props = defineProps<{
   items: { id: string; title: string; description: string }[]
 }>()

@@ -16,3 +16,7 @@ body {
 button {
   border: none;
 }
+
+button:disabled {
+  background-color: unset;
+}

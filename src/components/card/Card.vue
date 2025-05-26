@@ -1,14 +1,18 @@
 <template>
-  <div class="card" @click="onClick" :style="{
-    background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${getServerImageUrl($props.img)}') right/cover no-repeat`,
-  }">
-    <div class="card-title">{{ $props.title }}</div>
+  <div
+    class="card"
+    @click="onClick"
+    :style="{
+      background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${getServerImageUrl($props.img)}') right/cover no-repeat`,
+    }"
+  >
+    <div class="card-title" v-nbsp>{{ $props.title }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getServerImageUrl } from '@/utils/getServerImageUrl';
-import { useRouter } from 'vue-router';
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
