@@ -1,107 +1,109 @@
 <template>
-  <div :style="{ height: '100%' }">
-    <div class="toolbar">
-      <button @click="prevSpread" :disabled="pageNum <= 1">⬅ Prev</button>
-      <span
-        >Pages {{ pageNum }} - {{ pageNum + 1 <= pageCount ? pageNum + 1 : pageCount }} /
-        {{ pageCount }}</span
-      >
-      <button @click="nextSpread" :disabled="pageNum + 1 >= pageCount">Next ➡</button>
+  <div :class="styles.pdfViewer">
+    <div :class="[styles.viewer, numPages >= 3 ? styles.multiPage : '']" @click.stop>
+      <canvas ref="canvasRef1" :class="[styles.canvas, numPages >= 3 ? styles.canvasMore : '']" />
+      <canvas ref="canvasRef2" :class="[styles.canvas, numPages >= 3 ? styles.canvasMore : '']" />
     </div>
-    <canvas ref="canvas"></canvas>
+
+    <div v-if="numPages > 2" :class="styles.pdfViewer__pagination" @click.stop>
+      <PageSelect :handleKeyboardInput="handleKeyboardInput" :handlePrev="handlePrev" :handleNext="handleNext"
+        :numPages="numPages" :currentPage="currentPage" />
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist'
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 
-GlobalWorkerOptions.workerSrc = pdfjsWorker
+<script setup lang="ts">
+import { ref, watch, onMounted, shallowRef } from 'vue'
+import * as pdfjsLib from 'pdfjs-dist'
 
-const props = defineProps({
-  pdfUrl: { type: String, required: true },
-})
+import styles from './PdfClass.module.scss'
+import { getMonumentServerImageUrl } from '@/utils/getServerImageUrl';
+import PageSelect from '@/views/monuments-view/PageSelect/PageSelect.vue';
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
+const props = defineProps<{
+  url: string
+}>()
 
-const canvas = ref(null)
-const pageNum = ref(1)
-const pageCount = ref(0)
-let pdfDoc = null
+const canvasRef1 = ref<HTMLCanvasElement | null>(null)
+const canvasRef2 = ref<HTMLCanvasElement | null>(null)
 
-const renderSpread = async (leftPageNum) => {
-  const leftPage = await pdfDoc.getPage(leftPageNum)
-  const rightPageNum = leftPageNum + 1
-  const hasRight = rightPageNum <= pageCount.value
-  const rightPage = hasRight ? await pdfDoc.getPage(rightPageNum) : null
+const pdfDoc = shallowRef<any>(null)
+const currentPage = ref(1)
+const numPages = ref(0)
+const error = ref<string | null>(null)
+const showKeyBoard = ref(false)
 
-  const scale = 1.5
-  const leftViewport = leftPage.getViewport({ scale })
-  const rightViewport = rightPage ? rightPage.getViewport({ scale }) : null
+async function loadPdf(url: string) {
+  console.log('wtff')
+  try {
+    error.value = null
+    currentPage.value = 1
 
-  const totalWidth = leftViewport.width + (rightViewport?.width || 0)
-  const maxHeight = Math.max(leftViewport.height, rightViewport?.height || 0)
+    const response = await fetch(url)
+    if (!response.ok) throw new Error('Ошибка загрузки PDF')
 
-  const ctx = canvas.value.getContext('2d')
-  canvas.value.width = totalWidth
-  canvas.value.height = maxHeight
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
 
-  ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+    const loadingTask = pdfjsLib.getDocument(blobUrl)
+    const pdf = await loadingTask.promise
+    pdfDoc.value = pdf
+    numPages.value = pdf.numPages
 
-  // Render left page
-  ctx.save()
-  ctx.translate(0, 0)
-  await leftPage.render({
-    canvasContext: ctx,
-    viewport: leftViewport,
-  }).promise
-  ctx.restore()
-
-  // Render right page
-  if (rightPage) {
-    ctx.save()
-    ctx.translate(leftViewport.width, 0)
-    await rightPage.render({
-      canvasContext: ctx,
-      viewport: rightViewport,
-    }).promise
-    ctx.restore()
+    URL.revokeObjectURL(blobUrl)
+  } catch (err) {
+    console.error('Ошибка загрузки PDF:', err)
+    error.value = 'Не удалось загрузить PDF.'
   }
 }
 
-const nextSpread = () => {
-  if (pageNum.value + 1 < pageCount.value) {
-    pageNum.value += 2
-    renderSpread(pageNum.value)
+async function renderPage(pageNum: number, canvasRef: typeof canvasRef1) {
+  if (!canvasRef.value || !pdfDoc.value || pageNum > numPages.value) return
+
+  const page = await pdfDoc.value.getPage(pageNum)
+  const viewport = page.getViewport({ scale: 1.5 })
+  const canvas = canvasRef.value
+  const context = canvas.getContext('2d')
+
+  canvas.width = viewport.width
+  canvas.height = viewport.height
+
+  await page.render({ canvasContext: context!, viewport }).promise
+}
+
+async function renderPages() {
+  if (!pdfDoc.value) return
+
+  await renderPage(currentPage.value, canvasRef1)
+
+  if (currentPage.value + 1 <= numPages.value) {
+    await renderPage(currentPage.value + 1, canvasRef2)
+    if (canvasRef2.value) canvasRef2.value.style.display = 'block'
+  } else if (canvasRef2.value) {
+    canvasRef2.value.style.display = 'none'
   }
 }
 
-const prevSpread = () => {
-  if (pageNum.value > 2) {
-    pageNum.value -= 2
-  } else {
-    pageNum.value = 1
-  }
-  renderSpread(pageNum.value)
+function handlePrev() {
+  currentPage.value = Math.max(currentPage.value - 2, 1)
 }
 
-onMounted(async () => {
-  const loadingTask = getDocument('/1.pdf')
-  pdfDoc = await loadingTask.promise
-  pageCount.value = pdfDoc.numPages
-  renderSpread(pageNum.value)
+function handleNext() {
+  currentPage.value = Math.min(currentPage.value + 2, numPages.value)
+}
+
+function handleKeyboardInput(val: string) {
+  const page = Number(val)
+  if (!isNaN(page) && page >= 1 && page <= numPages.value) {
+    currentPage.value = page % 2 === 0 ? page - 1 : page
+  }
+}
+
+watch(() => currentPage.value, renderPages)
+watch(() => pdfDoc.value, renderPages)
+
+onMounted(() => {
+  loadPdf(getMonumentServerImageUrl(props.url))
 })
 </script>
-
-<style scoped>
-.toolbar {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-canvas {
-  border: 1px solid #ccc;
-  display: block;
-  margin: auto;
-}
-</style>

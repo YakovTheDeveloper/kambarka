@@ -3,80 +3,33 @@
     <button class="modal-close-btn" @click="onClose">
       <CrossIcon />
     </button>
-    <div class="docs">
-      <PDFViewer v-if="content?.media" :pdfUrl="getServerImageUrl(content.media)" />
+    <div class="docs" v-if="content?.media && category === 'document'">
+      <PDFViewer :url="content.media" />
     </div>
-
-    <div class="page-select" v-if="showPageSelect">
-      <div class="row">
-        <button class="navigation-prev"><ArrowLeftNavIcon /></button>
-        <input type="number" v-model="inputValue" />
-        <button class="navigation-next"><ArrowRightNavIcon /></button>
-      </div>
-      <div class="page-select-keyboard-container">
-        <div class="page-select-keyboard">
-          <button v-for="key in keyboardKeys" :key="key" @click="appendToInput(key)">
-            {{ key }}
-          </button>
-          <button class="page-select-keyboard__backspace" @click="backspace">
-            <BackspaceIcon />
-          </button>
-          <button @click="appendToInput('0')">0</button>
-          <button class="page-select-keyboard__enter" @click="submitInput">Ввод</button>
-        </div>
-      </div>
-      <div class="page-select-close" @click="showPageSelect = false">
-        <CrossRoundIcon />
-      </div>
-    </div>
-
-    <div class="navigation" v-else>
-      <button class="navigation-prev"><ArrowLeftNavIcon /></button>
-      <button class="navigation-current-page" @click="showPageSelect = true">Страница</button>
-      <button class="navigation-next"><ArrowRightNavIcon /></button>
-    </div>
+    <ImageContent v-if="content?.media && category === 'image'" :src="content.media" class="image-content" />
+    <VIdeoPlayer v-if="category === 'video'" :src="getServerImageUrl(content.media)" class="video-player" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
-import ArrowLeftNavIcon from '@/components/icons/ArrowLeftNavIcon.vue'
-import ArrowRightNavIcon from '@/components/icons/ArrowRightNavIcon.vue'
-import BackspaceIcon from '@/components/icons/BackspaceIcon.vue'
 import CrossIcon from '@/components/icons/CrossIcon.vue'
-import CrossRoundIcon from '@/components/icons/CrossRoundIcon.vue'
-import PDFViewer from './PDFViewer2.vue'
-import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import PDFViewer from './PDFViewer.vue'
+import { getMediaCategory } from '@/utils/getMediaCategory';
+import ImageContent from '@/views/monuments-view/ImageContent/ImageContent.vue';
+import { computed, watchEffect } from 'vue';
+import VIdeoPlayer from '@/views/monuments-view/VIdeoPlayer/VIdeoPlayer.vue';
+import { getServerImageUrl } from '@/utils/getServerImageUrl';
+
 
 const props = defineProps<{
   onClose: VoidFunction
   content: { id: number; media: string }
 }>()
 
-const currentPdfLink = computed(() =>
-  props.content?.media ? getServerImageUrl(props.content?.media) : '',
-)
-
+const category = computed(() => props.content?.media ? getMediaCategory(props.content?.media) : 'unknown')
 watchEffect(() => {
-  console.log(`output->currentPdfLink`, currentPdfLink.value)
+  console.log(category.value);
 })
-
-const keyboardKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-const inputValue = ref('')
-
-const appendToInput = (key: string) => {
-  inputValue.value += key
-}
-
-const backspace = () => {
-  inputValue.value = inputValue.value.slice(0, -1)
-}
-
-const submitInput = () => {
-  console.log('Entered value:', inputValue.value)
-}
-
-const showPageSelect = ref(false)
 </script>
 
 <style scoped lang="scss">
@@ -98,8 +51,19 @@ const showPageSelect = ref(false)
     color: #4fa127;
     border-radius: 50%;
     background-color: white;
+    z-index: 10;
   }
 }
+
+.video-player {
+  position: absolute;
+  inset: 0;
+}
+
+.image-content {
+  height: 100%;
+}
+
 .docs {
   width: 2502px;
   height: 1792px;
@@ -112,10 +76,11 @@ const showPageSelect = ref(false)
   transform: translateX(-50%);
 
   * {
-    background-color: #7c7373;
+    // background-color: #7c7373;
     border-radius: 60px;
   }
 }
+
 .navigation {
   position: absolute;
   display: flex;
@@ -205,6 +170,7 @@ const showPageSelect = ref(false)
       background-color: #fff;
       border-radius: 60px;
     }
+
     display: grid;
     grid-template-columns: repeat(3, 208px);
     grid-template-rows: repeat(4, 96px);

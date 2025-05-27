@@ -2,10 +2,7 @@
   <div class="container-bg container-padding container-bg-blur-2">
     <Header title="Памятники природы" />
     <div class="content">
-      <Slider
-        :photos="store.routeIdData?.memorialNatureImages || []"
-        :title="store.routeIdData?.title"
-      />
+      <Slider :photos="store.routeIdData?.memorialNatureImages || []" :title="store.routeIdData?.title" />
       <div class="content-desc">
         <Tabs :tabs="tabs" ref="tabsRef">
           <template #main>
@@ -14,12 +11,16 @@
           </template>
           <template #another>
             <Space value="50" />
-            <div
-              v-for="item in store.routeIdData?.memorialNatureMedia || []"
-              class="additional-item"
-              @click="currentDocument = item"
-            >
-              <DocumentIcon /> <span>Паспорт</span>
+            <div v-for="item in store.routeIdData?.memorialNatureMedia || []" class="additional-item"
+              @click="currentDocument = item">
+              <div class="content-thumb">
+                <DocumentIcon v-if="getMediaCategory(item.media) === 'document'" />
+                <img v-if="getMediaCategory(item.media) === 'image'" :src="getServerImageUrl(item.media)" />
+                <video v-if="getMediaCategory(item.media) === 'video'" :src="getServerImageUrl(item.media)"
+                  preload="metadata" muted playsinline></video>
+                <PlayIcon v-if="getMediaCategory(item.media) === 'video'" class="content-thumb-video-icon"
+                  :style="{ width: '80px', height: '80px' }" />
+              </div> <span>{{ item.title }}</span>
             </div>
           </template>
         </Tabs>
@@ -27,11 +28,7 @@
     </div>
   </div>
   <teleport to="body">
-    <MonumentDocuments
-      v-show="currentDocument"
-      @close="currentDocument = null"
-      :content="currentDocument"
-    />
+    <MonumentDocuments v-show="currentDocument" @close="currentDocument = null" :content="currentDocument" />
   </teleport>
 </template>
 
@@ -45,6 +42,9 @@ import DocumentIcon from '@/components/icons/DocumentIcon.vue'
 import MonumentDocuments from './MonumentDocuments.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useMonumentStore } from '@/stores/memorialStore'
+import { getMediaCategory } from '@/utils/getMediaCategory'
+import { getServerImageUrl } from '@/utils/getServerImageUrl'
+import PlayIcon from '@/components/icons/PlayIcon.vue'
 
 const store = useMonumentStore()
 const currentDocument = ref<{ id: number; media: string } | null>(null)
@@ -91,6 +91,33 @@ const textContent = computed(() => {
 
   &-desc {
     flex-grow: 1;
+  }
+
+  &-thumb {
+    width: 120px;
+    height: 120px;
+    position: relative;
+
+    &-video-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background-color: rgba(79, 161, 39, 0.8);
+      padding: 15px;
+    }
+
+    video {
+      height: 100%;
+      object-fit: cover;
+
+    }
+
+    * {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 
