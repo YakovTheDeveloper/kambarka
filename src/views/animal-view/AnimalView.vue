@@ -24,14 +24,14 @@
       </div>
     </div>
     <div class="center-1 block">
-      <div class="img"><img :src="getServerImageUrl(data?.image)" alt="" /></div>
+      <div class="img"><img :src="getServerImageUrl(data?.image)" :style="{ borderRadius: '24px' }" alt="" /></div>
       <div class="col" v-if="data?.blockTwo[0].field11Name">
         <p class="sub">{{ data?.blockTwo[0].field11Name }}</p>
         <p>
           {{ data?.blockTwo[0].field11Description }}
         </p>
       </div>
-      <div class="row" :style="{ gap: '20px' }">
+      <div class="row" :style="{ gap: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr' }">
         <div class="col" v-if="data?.blockTwo[0].field12Name">
           <p class="sub_s">{{ data?.blockTwo[0].field12Name }}</p>
           <p>{{ data?.blockTwo[0].field12Description }}</p>
@@ -65,16 +65,16 @@
       </div>
     </div>
     <div class="center-1-bottom block">
-      <img v-if="data?.blockTwoMedia.image2" :src="getServerImageUrl(data?.blockTwoMedia.image2)" />
-      <img v-if="data?.blockTwoMedia.image3" :src="getServerImageUrl(data?.blockTwoMedia.image3)" />
+      <img v-if="data?.blockTwoMedia.image2" :src="getServerImageUrl(data?.blockTwoMedia.image2)" class="radius" />
+      <img v-if="data?.blockTwoMedia.image3" :src="getServerImageUrl(data?.blockTwoMedia.image3)" class="radius" />
     </div>
     <div class="center-2-bottom block">
       <div :style="{ position: 'relative', height: '100%' }">
-        <video v-if="data?.blockThreeMedia.video" :src="getServerImageUrl(data?.blockThreeMedia?.video)" controls
-          autoplay muted playsinline class="no-timeline" @play="isPlaying = true" @pause="isPlaying = false"
+        <video v-if="data?.blockThreeMedia.video" :src="getServerImageUrl(data?.blockThreeMedia?.video)" autoplay muted
+          playsinline class="no-timeline" @click="togglePlay" @play="isPlaying = true" @pause="isPlaying = false"
           ref="videoRef">
         </video>
-        <button class="video-button" v-if="!isPlaying" @click="playVideo">
+        <button class="video-button" v-if="!isPlaying" @click="togglePlay">
           <PlayIcon width="40px" />
         </button>
       </div>
@@ -241,7 +241,7 @@
 
 <script setup lang="ts">
 import { useHabitatData } from '@/stores/habitatStore'
-import { computed, onMounted, watchEffect, ref } from 'vue'
+import { computed, onMounted, watchEffect, ref, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AnimalViewBlockOne from './AnimalViewBlockOne.vue'
 import AnimalViewBlockOne2 from './AnimalViewBlockOne2.vue'
@@ -280,19 +280,29 @@ watchEffect(() => {
   console.log(`output->data`, data.value)
 })
 
-onMounted(() => {
-  const { id } = router.currentRoute.value.params
-  store.fetchHabitat(+id)
-})
 
 const isPlaying = ref(false)
 const videoRef = ref(null)
 
-const playVideo = () => {
-  if (videoRef.value) {
-    videoRef.value.play()
+
+const togglePlay = () => {
+  const video = videoRef.value;
+  if (!video) return;
+
+  if (video.paused) {
+    video.play();
+    isPlaying.value = true;
+  } else {
+    video.pause();
+    isPlaying.value = false;
   }
-}
+};
+
+onMounted(() => {
+  const { id } = router.currentRoute.value.params;
+  store.fetchHabitat(+id);
+
+});
 </script>
 
 <style scoped lang="scss">
@@ -301,13 +311,17 @@ const playVideo = () => {
   line-height: 130%;
 }
 
+.radius {
+  border-radius: 24px;
+}
+
 .grid-row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
 img {
-  background-color: red;
+  // background-color: red;
 }
 
 .container {
@@ -379,7 +393,7 @@ header {
     height: 582px;
     width: 582px;
     border-radius: 24px;
-    background-color: red;
+    // background-color: red;
 
     img {
       width: 100%;
@@ -403,7 +417,7 @@ header {
   bottom: 80px;
 
   img {
-    border-radius: 50%;
+    // border-radius: 50%;
   }
 
   display: grid;
@@ -412,7 +426,7 @@ header {
 
   * {
     border-radius: 24px;
-    background-color: #fff;
+    // background-color: #fff;
   }
 }
 
@@ -441,14 +455,25 @@ header {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    touch-action: manipulation;
 
-    &.no-timeline::-webkit-media-controls-timeline {
-      display: none;
+    &.no-timeline::-webkit-media-controls-panel {
+      background: transparent !important;
+      /* Remove gradient */
     }
 
-    /* Firefox - very limited control */
-    &.no-timeline::-moz-media-controls {
-      display: none;
+    &.no-timeline::-webkit-media-controls-timeline {
+      display: none !important;
+    }
+
+    &.no-timeline::-webkit-media-controls-current-time-display,
+    &.no-timeline::-webkit-media-controls-time-remaining-display {
+      display: none !important;
+    }
+
+    &.no-timeline::-webkit-media-controls-play-button {
+      filter: invert(1);
+      /* optional: make play button visible if needed */
     }
   }
 }

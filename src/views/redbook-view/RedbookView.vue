@@ -1,7 +1,7 @@
 <template>
   <div class="container-bg container-padding">
     <Header title="Красная книга Камбарского района">
-      <Search :value="query" @change="onChange" />
+      <Search :value="query" @change="onChange" @clear="clear" />
 
     </Header>
     <div class="bg-alpha content">
@@ -21,7 +21,7 @@ import { useRedBookStore } from '@/stores/redbookStore'
 import { useSearch } from '@/views/shared/composables/useSearch'
 import Search from '@/views/shared/search/Search.vue'
 const store = useRedBookStore()
-const { filtered, query, onChange } = useSearch(store.data)
+const { filtered, query, onChange, clear } = useSearch(store.data)
 
 </script>
 

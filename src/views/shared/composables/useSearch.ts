@@ -10,10 +10,12 @@ export function useSearch<T extends { [key: string]: any }>(data: T[], key = 'ti
     );
 
     const onChange = (value: string) => query.value = value
+    const clear = () => query.value = ''
 
     return {
         query,
         onChange,
+        clear,
         filtered,
     };
 }

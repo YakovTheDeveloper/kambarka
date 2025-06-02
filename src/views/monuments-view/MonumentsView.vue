@@ -1,7 +1,7 @@
 <template>
   <div class="container-bg container-padding">
     <Header title="Памятники природы">
-      <Search :value="query" @change="onChange" />
+      <Search :value="query" @change="onChange" @clear="clear" />
     </Header>
     <div class="bg-alpha content">
       <CardList>
@@ -22,8 +22,7 @@ import { useSearch } from '@/views/shared/composables/useSearch'
 
 const store = useMonumentStore()
 
-const { filtered, query, onChange } = useSearch(store.data)
-
+const { filtered, query, onChange, clear } = useSearch(store.data)
 </script>
 
 <style scoped lang="scss">

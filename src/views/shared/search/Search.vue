@@ -2,27 +2,41 @@
     <div class="search">
         <SearchIcon class="search-icon" />
         <input v-model="query" @input="onInput" type="text" placeholder="Поиск" class="search-input" />
-
+        <button v-show="query" class="search-clear-button" @click="onClear">
+            <CrossIcon />
+        </button>
 
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, computed, watch } from 'vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
+import CrossIcon from '@/components/icons/CrossIcon.vue';
 
 const props = defineProps<{
     value: string
 }>()
 
 const query = ref(props.value)
+
+watch(() => props.value, (newVal) => {
+    query.value = newVal
+})
+
 const emit = defineEmits<{
     (e: 'change', value: string): void
+    (e: 'clear'): void
 }>()
 
 function onInput() {
     emit('change', query.value)
 }
+
+function onClear() {
+    emit('clear')
+}
+
 
 </script>
 
@@ -35,6 +49,15 @@ function onInput() {
     background-color: rgba(255, 255, 255, 1);
     position: relative;
     width: 883px;
+    border: 8px solid transparent;
+
+    &:focus-within {
+        border-color: rgba(79, 161, 39, 1);
+    }
+
+    &-clear-button {
+        background-color: transparent;
+    }
 
     &-icon {
         position: absolute;
@@ -48,13 +71,14 @@ function onInput() {
     flex: 1;
     border: none;
     outline: none;
-    font-weight: 600;
     font-size: 48px;
     line-height: 100%;
-    color: rgba(79, 161, 39, 1);
+    color: #323232;
+
+    font-weight: 400; // color: rgba(79, 161, 39, 1);
 
     &::placeholder {
-        color: rgba(79, 161, 39, 1);
+        font-weight: 600;
     }
 
 }

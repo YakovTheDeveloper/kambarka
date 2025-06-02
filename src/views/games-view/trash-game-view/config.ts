@@ -133,7 +133,6 @@ const secondLevelTrash = [
 ]
 
 const thirdLevelTrash = [
-  { src: '/images/games/trash/metal4.png', x: 400, y: 400, type: 'metal' },
   { src: '/images/games/trash/accum2.png', x: 1100, y: 400, type: 'accum' },
   { src: '/images/games/trash/accum3.png', x: 1800, y: 400, type: 'accum' },
   { src: '/images/games/trash/glass1.png', x: 2500, y: 400, type: 'glass' },

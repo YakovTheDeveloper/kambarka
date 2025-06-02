@@ -1,7 +1,7 @@
 <template>
   <div class="container-bg container-padding">
     <Header :title="title">
-      <Search :value="query" @change="onChange" />
+      <Search :value="query" @change="onChange" @clear="clear" />
     </Header>
     <div class="bg-alpha content">
       <CardList>
@@ -47,7 +47,7 @@ const data = computed(() => {
     return [] // Default case if no matching type is found
   }
 })
-const { filtered, query, onChange } = useSearch(data.value)
+const { filtered, query, onChange, clear } = useSearch(data.value)
 
 const onCardClick = (id: number) => {
   router.push(`/habitat/${id}`)
