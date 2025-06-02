@@ -1,7 +1,7 @@
 <template>
     <div class="search">
         <SearchIcon class="search-icon" />
-        <input v-model="query" @input="onInput" type="text" placeholder="Поиск" class="search-input" />
+        <input :ref="input" v-model="query" @input="onInput" type="text" placeholder="Поиск" class="search-input" />
         <button v-show="query" class="search-clear-button" @click="onClear">
             <CrossIcon />
         </button>
@@ -19,7 +19,7 @@ const props = defineProps<{
 }>()
 
 const query = ref(props.value)
-
+const input = ref()
 watch(() => props.value, (newVal) => {
     query.value = newVal
 })
@@ -36,6 +36,10 @@ function onInput() {
 function onClear() {
     emit('clear')
 }
+
+defineExpose({
+    inputRef: input
+})
 
 
 </script>

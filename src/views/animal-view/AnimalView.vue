@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <header class="block row" :style="{ alignItems: 'center', gap: '40px' }">
-      <button class="button" @click="router.back()" :style="{ borderRadius: '40px' }">
-        <BackButtonIcon />
-      </button>
+      <BackButton to="/habitat" />
       <p>{{ data?.title }}</p>
     </header>
     <div class="left block">
@@ -251,6 +249,7 @@ import AnimalViewBlockThree from './AnimalViewBlockThree.vue'
 import Space from '@/components/space/Space.vue'
 import PlayIcon from '@/components/icons/PlayIcon.vue'
 import PlaySoundIcon from '@/components/icons/PlaySoundIcon.vue'
+import BackButton from '@/components/back-button/BackButton.vue'
 
 const router = useRouter()
 const store = useHabitatData()

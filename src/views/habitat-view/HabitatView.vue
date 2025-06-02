@@ -1,7 +1,7 @@
 <template>
   <div class="container-bg container-padding">
-    <Header :title="title">
-      <Search :value="query" @change="onChange" @clear="clear" />
+    <Header :title="title" @back="router.push('/')">
+      <Search :ref="searchRef" :value="query" @change="onChange" @clear="clear" />
     </Header>
     <div class="bg-alpha content">
       <CardList>
@@ -10,15 +10,19 @@
       </CardList>
     </div>
   </div>
+  <KeyBoardLetters :input-ref="searchRef" @input-change="onChange" @click-input="onChange" />
+
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+
 const route = useRoute()
 const router = useRouter()
 const store = useHabitatData()
+const searchRef = ref()
 
 const title = computed(() => {
   const queryParam = route.query.type
@@ -62,6 +66,7 @@ import { useHabitatData } from '@/stores/habitatStore'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
 import Search from '@/views/shared/search/Search.vue'
 import { useSearch } from '@/views/shared/composables/useSearch'
+import KeyBoardLetters from '@/components/keyboard/KeyBoardLetters.vue'
 </script>
 
 <style scoped lang="scss">

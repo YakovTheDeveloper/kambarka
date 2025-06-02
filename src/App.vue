@@ -9,6 +9,7 @@ import WaitingMode from '@/views/shared/waiting-mode/WaitingMode.vue';
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router'
 import { useSightStore } from '@/stores/sightStore';
+import KeyBoardLetters from '@/components/keyboard/KeyBoardLetters.vue';
 
 
 const redbookStore = useRedBookStore()
@@ -29,6 +30,8 @@ onMounted(() => {
   homeStore.fetchSections()
   sightStore.fetchAll()
 })
+
+
 
 </script>
 
