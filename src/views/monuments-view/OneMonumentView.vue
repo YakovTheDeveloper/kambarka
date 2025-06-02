@@ -19,68 +19,25 @@
               class="additional-item"
               @click="currentDocument = item"
             >
-              <div
-                class="preview-image"
-                style="width: 107px; height: 107px; overflow: hidden; border-radius: 8px"
-              >
-                <template v-if="getFileTypeFromUrl(item.media) === 'image'">
-                  <img
-                    :src="getServerImageUrl(item.media)"
-                    alt="preview"
-                    style="width: 100%; height: 100%; object-fit: cover; display: block"
-                  />
-                </template>
-
-                <template v-else-if="getFileTypeFromUrl(item.media) === 'video'">
-                  <video
-                    :src="getServerImageUrl(item.media)"
-                    muted
-                    preload="metadata"
-                    playsinline
-                    disablepictureinpicture
-                    controlslist="nodownload nofullscreen noplaybackrate noremoteplayback"
-                    style="
-                      width: 107px;
-                      height: 107px;
-                      object-fit: cover;
-                      pointer-events: none;
-                      user-select: none;
-                      appearance: none;
-                    "
-                  ></video>
-                  <div
-                    style="
-                      position: absolute;
-                      top: 50%;
-                      left: 50%;
-                      transform: translate(-50%, -50%);
-                      background-color: rgba(79, 161, 39, 0.8);
-                      border-radius: 50%;
-                      padding: 10px;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                    "
-                  >
-                    <PlayIcon />
-                  </div>
-                </template>
-
-                <template v-else>
-                  <div
-                    style="
-                      width: 100%;
-                      height: 100%;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                    "
-                  >
-                    <DocumentIcon style="width: 96px; height: 96px" />
-                  </div>
-                </template>
+              <div class="content-thumb">
+                <DocumentIcon v-if="getMediaCategory(item.media) === 'document'" />
+                <img
+                  v-if="getMediaCategory(item.media) === 'image'"
+                  :src="getServerImageUrl(item.media)"
+                />
+                <video
+                  v-if="getMediaCategory(item.media) === 'video'"
+                  :src="getServerImageUrl(item.media)"
+                  preload="metadata"
+                  muted
+                  playsinline
+                ></video>
+                <PlayIcon
+                  v-if="getMediaCategory(item.media) === 'video'"
+                  class="content-thumb-video-icon"
+                  :style="{ width: '80px', height: '80px' }"
+                />
               </div>
-
               <span>{{ item.title }}</span>
             </div>
           </template>
@@ -107,8 +64,8 @@ import DocumentIcon from '@/components/icons/DocumentIcon.vue'
 import MonumentDocuments from './MonumentDocuments.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useMonumentStore } from '@/stores/memorialStore'
+import { getMediaCategory } from '@/utils/getMediaCategory'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
-import { getFileTypeFromUrl } from '@/utils/getFileTypeFromUrl'
 import PlayIcon from '@/components/icons/PlayIcon.vue'
 
 const store = useMonumentStore()
@@ -159,6 +116,32 @@ const textContent = computed(() => {
 
   &-desc {
     flex-grow: 1;
+  }
+
+  &-thumb {
+    width: 120px;
+    height: 120px;
+    position: relative;
+
+    &-video-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background-color: rgba(79, 161, 39, 0.8);
+      padding: 15px;
+    }
+
+    video {
+      height: 100%;
+      object-fit: cover;
+    }
+
+    * {
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 

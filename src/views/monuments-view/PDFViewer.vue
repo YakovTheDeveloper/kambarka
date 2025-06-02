@@ -1,45 +1,19 @@
 <template>
-  <div :class="$style.pdfViewer">
-    <div :class="[$style.viewer, numPages >= 3 ? $style.multiPage : '']">
-      <canvas ref="canvasRef1" :class="[$style.canvas, numPages >= 3 ? $style.canvasMore : '']" />
-      <canvas ref="canvasRef2" :class="[$style.canvas, numPages >= 3 ? $style.canvasMore : '']" />
+  <div :class="styles.pdfViewer">
+    <div :class="[styles.viewer, numPages >= 3 ? styles.multiPage : '']" @click.stop>
+      <canvas ref="canvasRef1" :class="[styles.canvas, numPages >= 3 ? styles.canvasMore : '']" />
+      <canvas ref="canvasRef2" :class="[styles.canvas, numPages >= 3 ? styles.canvasMore : '']" />
     </div>
 
-    <!-- <div v-if="numPages > 2" :class="$style.pdfViewer__pagination" @click.stop>
-      <template v-if="!showKeyBoard">
-        <button
-          :class="$style.pdfViewer__buttonPagination"
-          @click="handlePrev"
-          :disabled="currentPage <= 1"
-        >
-          <img :src="VectorLeft" alt="" />
-        </button>
-        <div @click="showKeyBoard = true" :class="$style.pdfViewer__Boxpage">
-          <span :class="$style.pdfViewer__page">
-            Страницы {{ currentPage }}
-            {{ currentPage + 1 <= numPages ? ` – ${currentPage + 1}` : '' }}
-            / {{ numPages }}
-          </span>
-        </div>
-        <button
-          :class="$style.pdfViewer__buttonPagination"
-          @click="handleNext"
-          :disabled="currentPage + 1 > numPages"
-        >
-          <img :src="VectorRight" alt="" />
-        </button>
-      </template>
-    </div> -->
-
-    <!-- <KeyBoardLetters
-      v-if="showKeyBoard"
-      :keyBoardNumber="true"
-      :maxValue="numPages"
-      @onVisable="showKeyBoard = false"
-      @onInputChange="handleKeyboardInput"
-    /> -->
-
-    <div v-if="error" style="color: red">{{ error }}</div>
+    <div v-if="numPages > 2" :class="styles.pdfViewer__pagination" @click.stop>
+      <PageSelect
+        :handleKeyboardInput="handleKeyboardInput"
+        :handlePrev="handlePrev"
+        :handleNext="handleNext"
+        :numPages="numPages"
+        :currentPage="currentPage"
+      />
+    </div>
   </div>
 </template>
 
@@ -48,9 +22,9 @@ import { ref, watch, onMounted, shallowRef } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
 
 import styles from './PdfClass.module.scss'
+import { getMonumentServerImageUrl } from '@/utils/getServerImageUrl'
+import PageSelect from '@/views/monuments-view/PageSelect/PageSelect.vue'
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
-// pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
-
 const props = defineProps<{
   url: string
 }>()
@@ -78,7 +52,6 @@ async function loadPdf(url: string) {
 
     const loadingTask = pdfjsLib.getDocument(blobUrl)
     const pdf = await loadingTask.promise
-    console.log(`output->pdf`, pdf)
     pdfDoc.value = pdf
     numPages.value = pdf.numPages
 
@@ -131,29 +104,10 @@ function handleKeyboardInput(val: string) {
   }
 }
 
-defineExpose({
-  handleKeyboardInput,
-  handlePrev,
-  handleNext,
-  numPages,
-  currentPage,
-})
-
 watch(() => currentPage.value, renderPages)
 watch(() => pdfDoc.value, renderPages)
-// watch(
-//   () => props.url,
-//   (newUrl) => {
-//     if (newUrl) loadPdf(newUrl)
-//   },
-// )
 
 onMounted(() => {
-  console.log(`output->props.url`, props.url)
-  loadPdf(props.url)
+  loadPdf(getMonumentServerImageUrl(props.url))
 })
 </script>
-
-<style module lang="scss">
-@import './PdfClass.module.scss';
-</style>
