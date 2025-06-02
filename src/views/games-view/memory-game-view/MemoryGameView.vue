@@ -22,8 +22,6 @@ import { useRouter } from 'vue-router'
 import { useGameStore } from '@/stores/gameStore'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
 
-
-
 const difficultyStore = useGetDifficulty()
 
 const gridStyle = computed(() => {
@@ -34,7 +32,6 @@ const gridStyle = computed(() => {
   }
   return gridConfig[difficultyStore.difficulty.value] || {}
 })
-
 
 const store = useGameStore()
 
@@ -47,7 +44,7 @@ const cards = computed(() => {
   if (!initCards) return []
   const doubled = initCards.flatMap((el, idx) => [
     { id: `${idx * 2 + 1}`, image: el.image },
-    { id: `${idx * 2 + 2}`, image: el.image }
+    { id: `${idx * 2 + 2}`, image: el.image },
   ])
   return doubled
 })
@@ -63,7 +60,6 @@ const headerSpace = computed(() => {
 const isCardOpened = (id: string) => {
   return cardsToShow.value.some((card) => card.id === id)
 }
-
 
 const getOpenedCardStyle = (id: string, image: string) => {
   if (cardsToShow.value.some((card) => card.id === id)) {
@@ -89,32 +85,42 @@ const lock = ref(false)
 
 const cardsToShow = ref<Card[]>([])
 
-const onCardClick = (card: any) => {
-  if (lock.value === true) return
+const onCardClick = (card: Card) => {
+  if (lock.value) return // Ignore if locked (checking cards)
+  if (currentTurn.value.length >= 2) return // Prevent flipping more than two cards at once
+  if (cardsToShow.value.some((shownCard) => shownCard.id === card.id)) return // Ignore clicking already flipped card
+
   currentTurn.value = [...currentTurn.value, card]
   cardsToShow.value = [...cardsToShow.value, card]
 }
 
 watchEffect(() => {
   if (currentTurn.value.length === 2) {
+    lock.value = true // immediately lock
+
     if (currentTurn.value[0].image === currentTurn.value[1].image) {
+      // matched cards stay opened
       currentTurn.value = []
+      lock.value = false
       return
     }
-    lock.value = true
+
+    // unmatched, flip back after timeout
     setTimeout(() => {
       cardsToShow.value = cardsToShow.value.filter(
         (card) => !currentTurn.value.some((turn) => turn.id === card.id),
       )
       currentTurn.value = []
       lock.value = false
-    }, 1000)
+    }, 1750)
   }
 })
 
 const router = useRouter()
 
 watchEffect(() => {
+  console.log(`output->cardsToShow.value`, cardsToShow.value)
+  console.log(`output->cards.value.length`, cards.value.length)
   if (cardsToShow.value.length === 0 || cards.value.length === 0) return
   if (cardsToShow.value.length === cards.value.length) {
     setTimeout(() => {

@@ -23,6 +23,7 @@ import OneRedbookView from '@/views/redbook-view/OneRedbookView.vue'
 import RedbookView from '@/views/redbook-view/RedbookView.vue'
 import PuzzleGameFinish from '@/views/games-view/puzzle-game-view/PuzzleGameFinish.vue'
 import OneSightView from '@/views/sights-view/OneSightView.vue'
+import TrashGameFinish from '@/views/games-view/trash-game-view/TrashGameFinish.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,7 +51,7 @@ const router = createRouter({
     {
       path: '/games/trash/finish',
       name: 'games/trash/finish',
-      component: GameFinish,
+      component: TrashGameFinish,
     },
     {
       path: '/games/find-difference-difficulty',

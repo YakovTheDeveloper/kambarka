@@ -3,13 +3,9 @@
     <h1>Отличная работа!</h1>
     <template v-if="$slots.default">
       <div class="center">
-        <button class="button" @click="onRestart" v-if="sideButtons">
-          <RestartIcon />Ещё раз
-        </button>
+        <button class="button" @click="onRestart" v-if="sideButtons"><RestartIcon />Ещё раз</button>
         <slot></slot>
-        <button class="button" @click="onHome" v-if="sideButtons">
-          <HomeIcon />На главную
-        </button>
+        <button class="button" @click="onHome" v-if="sideButtons"><HomeIcon />На главную</button>
       </div>
     </template>
     <template v-else>
@@ -18,12 +14,8 @@
       </div>
     </template>
     <div v-if="!sideButtons" class="actions">
-      <button class="button" @click="onRestart">
-        <RestartIcon />Ещё раз
-      </button>
-      <button class="button" @click="onHome">
-        <HomeIcon />На главную
-      </button>
+      <button class="button" @click="onRestart"><RestartIcon />Ещё раз</button>
+      <button class="button" @click="onHome"><HomeIcon />На главную</button>
     </div>
   </div>
 </template>
@@ -35,12 +27,12 @@ import { useRouter } from 'vue-router'
 const props = defineProps({
   currentGameLink: {
     type: String,
-    required: true
+    required: true,
   },
   sideButtons: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 const router = useRouter()
 const onRestart = () => {
