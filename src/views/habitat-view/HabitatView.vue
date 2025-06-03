@@ -1,7 +1,7 @@
 <template>
   <div class="container-bg container-padding">
     <Header :title="title" @back="router.push('/')">
-      <Search :ref="searchRef" :value="query" @change="onChange" @clear="clear" />
+      <Search v-model:value="query" @change="onChange" @clear="clear" />
     </Header>
     <div class="bg-alpha content">
       <CardList>
@@ -10,19 +10,19 @@
       </CardList>
     </div>
   </div>
-  <KeyBoardLetters :input-ref="searchRef" @input-change="onChange" @click-input="onChange" />
+  <!-- <KeyBoardLetters :input-ref="inputRef" @input-change="onChange" @click-input="onChange" /> -->
 
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, nextTick, onMounted, watch, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 
 const route = useRoute()
 const router = useRouter()
 const store = useHabitatData()
-const searchRef = ref()
+
 
 const title = computed(() => {
   const queryParam = route.query.type

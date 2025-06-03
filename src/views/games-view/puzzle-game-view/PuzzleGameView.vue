@@ -11,7 +11,8 @@
         // backgroundPosition: 'center',
       }">
         <img :src="gridImage" alt="" class="puzzle-grid" :draggable="false" />
-        <img :src="baseImage" alt="" class="puzzle-image" ref="puzzleImageRef" @click="handleClick" />
+        <img :src="baseImage" alt="" class="puzzle-image" :draggable="false" ref="puzzleImageRef"
+          @click="handleClick" />
       </div>
       <div class="puzzle-pieces">
         <template v-for="(piece, index) in pieces" :key="index">
@@ -184,6 +185,7 @@ const { endDrag, onDrag, startDrag } = useMovable({
     height: 100%;
     opacity: 0.25;
     padding: 40px;
+    user-select: none;
   }
 
   .puzzle-grid {

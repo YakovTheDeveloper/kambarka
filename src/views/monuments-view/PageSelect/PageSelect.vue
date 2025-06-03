@@ -4,7 +4,7 @@
       <button class="navigation-prev" @click="handlePrev" :disabled="currentPage <= 1">
         <ArrowLeftNavIcon />
       </button>
-      <input type="number" v-model="inputValue" />
+      <input type="number" v-model="inputValue" ref="inputRef" />
       <button class="navigation-next" :disabled="currentPage + 1 > numPages" @click="handleNext">
         <ArrowRightNavIcon />
       </button>
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import ArrowLeftNavIcon from '@/components/icons/ArrowLeftNavIcon.vue'
 import ArrowRightNavIcon from '@/components/icons/ArrowRightNavIcon.vue'
 import BackspaceIcon from '@/components/icons/BackspaceIcon.vue'
@@ -53,17 +53,20 @@ const props = defineProps<{
   handleNext: VoidFunction
   handleKeyboardInput: (text: string) => void
 }>()
+
+const keyboardKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+const inputValue = ref('')
+const inputRef = ref<HTMLInputElement | null>(null)
+
 const onPageNav = () => {
   showPageSelect.value = true
   props.handlePrev()
+
 }
-const keyboardKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-const inputValue = ref('')
 
 const appendToInput = (key: string) => {
   inputValue.value += key
 }
-
 const backspace = () => {
   inputValue.value = inputValue.value.slice(0, -1)
 }
@@ -73,6 +76,16 @@ const submitInput = () => {
 }
 
 const showPageSelect = ref(false)
+
+
+watchEffect(() => {
+  if (!showPageSelect.value) return
+  console.log(inputRef.value);
+  inputRef.value?.focus()
+
+})
+
+
 </script>
 <style lang="scss" scoped>
 button {

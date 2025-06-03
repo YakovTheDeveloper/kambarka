@@ -1,5 +1,4 @@
-:root {
-}
+:root {}
 
 *,
 *::before,
@@ -9,8 +8,14 @@
   padding: 0;
 }
 
+html {
+  width: 3840px;
+  height: 2160px;
+}
+
 body {
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 button {

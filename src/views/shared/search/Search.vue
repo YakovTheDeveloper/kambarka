@@ -1,22 +1,33 @@
 <template>
     <div class="search">
         <SearchIcon class="search-icon" />
-        <input :ref="input" v-model="query" @input="onInput" type="text" placeholder="Поиск" class="search-input" />
+        <input ref="input" v-model="query" @input="onInput" type="text" placeholder="Поиск" class="search-input"
+            @focus="isKeyboardShow = true" />
         <button v-show="query" class="search-clear-button" @click="onClear">
             <CrossIcon />
         </button>
+        <Teleport to="#app">
+            <KeyBoardLetters v-if="isKeyboardShow" :input-ref="input" @input-change="onChange" @click-input="onFocus"
+                @visible="hideKeyboard" />
+        </Teleport>
 
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, computed, watch } from 'vue'
+import { ref, defineEmits, computed, watch, Teleport } from 'vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import CrossIcon from '@/components/icons/CrossIcon.vue';
+import KeyBoardLetters from '@/components/keyboard/KeyBoardLetters.vue';
 
 const props = defineProps<{
     value: string
 }>()
+
+const isKeyboardShow = ref(false)
+const onFocus = () => {
+    input?.value?.focus()
+}
 
 const query = ref(props.value)
 const input = ref()
@@ -29,12 +40,21 @@ const emit = defineEmits<{
     (e: 'clear'): void
 }>()
 
+function onChange(value: string) {
+    emit('change', value)
+}
+
 function onInput() {
     emit('change', query.value)
 }
 
 function onClear() {
+    query.value = ''
     emit('clear')
+}
+
+function hideKeyboard() {
+    isKeyboardShow.value = false
 }
 
 defineExpose({

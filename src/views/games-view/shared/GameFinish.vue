@@ -3,9 +3,13 @@
     <h1>Отличная работа!</h1>
     <template v-if="$slots.default">
       <div class="center">
-        <button class="button" @click="onRestart" v-if="sideButtons"><RestartIcon />Ещё раз</button>
+        <button class="button" @click="onRestart" v-if="sideButtons">
+          <RestartIcon />Ещё раз
+        </button>
         <slot></slot>
-        <button class="button" @click="onHome" v-if="sideButtons"><HomeIcon />На главную</button>
+        <button class="button" @click="onHome" v-if="sideButtons">
+          <HomeIcon />На главную
+        </button>
       </div>
     </template>
     <template v-else>
@@ -14,8 +18,12 @@
       </div>
     </template>
     <div v-if="!sideButtons" class="actions">
-      <button class="button" @click="onRestart"><RestartIcon />Ещё раз</button>
-      <button class="button" @click="onHome"><HomeIcon />На главную</button>
+      <button class="button" @click="onRestart">
+        <RestartIcon />Ещё раз
+      </button>
+      <button class="button" @click="onHome">
+        <HomeIcon />На главную
+      </button>
     </div>
   </div>
 </template>
@@ -39,7 +47,7 @@ const onRestart = () => {
   router.push(props.currentGameLink)
 }
 const onHome = () => {
-  router.push('/games')
+  router.push('/')
 }
 </script>
 

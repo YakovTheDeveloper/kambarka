@@ -5,30 +5,37 @@ import { keys, keysNumber } from './model/modele';
 import Icon from '@/components/keyboard/ui/Icon/Icon.vue';
 // import Icon from '@/components/keyboard/ui/Icon/Icon.vue';
 
-interface Props {
+
+const props = defineProps<{
   inputRef?: HTMLInputElement | HTMLTextAreaElement | null;
-  onInputChange?: (value: string) => void;
-  onVisable?: () => void;
-  clickInput?: () => void;
   className?: string;
   keyBoardNumber?: boolean;
   maxValue?: number;
-}
+}>();
 
-const props = defineProps<Props>();
+const emit = defineEmits<{
+  (e: 'input-change', value: string): void;
+  (e: 'visible'): void;
+  (e: 'click-input'): void;
+}>();
 
 const internalValue = ref('');
 const shiftMode = ref<'off' | 'once' | 'lock'>('off');
 const internalInputRef = ref<HTMLInputElement | null>(null);
 
+
+const onCloseButton = () => {
+  emit('visible')
+}
 const updateCursor = () => {
   const targetInput = props.inputRef || internalInputRef.value;
   if (!targetInput) return;
-  props.clickInput?.();
+  emit('click-input')
   return targetInput.selectionStart || 0;
 };
 
 const handleKeyPress = (key: string) => {
+  console.log('props.inputRef', props.inputRef);
   const targetInput = props.inputRef || internalInputRef.value;
   if (!targetInput) return;
 
@@ -56,7 +63,7 @@ const handleKeyPress = (key: string) => {
       break;
 
     case 'Ввод':
-      props.clickInput?.();
+      emit('click-input')
       return;
 
     case 'shift':
@@ -92,18 +99,19 @@ const handleKeyPress = (key: string) => {
     targetInput.setSelectionRange(newCursorPos, newCursorPos);
   });
 
-  props.onInputChange?.(newValue);
+  // console.log('00');
+  emit('input-change', newValue)
 };
 
 watch(internalValue, () => {
-  props.clickInput?.();
+  emit('click-input')
 });
 
 onMounted(() => {
   if (props.keyBoardNumber) {
     const initial = props.maxValue && props.maxValue > 2 ? '2' : '1';
     internalValue.value = initial;
-    props.onInputChange?.(initial);
+    emit('input-change', initial);
 
     const targetInput = props.inputRef || internalInputRef.value;
     if (targetInput) targetInput.value = initial;
@@ -131,52 +139,7 @@ const isAtMax = () =>
 </script>
 
 <template>
-  <div :class="[styles.keyBoardLetters, props.className]" @click="props.onVisable">
-    <!-- Input Box for Internal Input -->
-    <!-- <div v-if="!props.inputRef" class="keyboard-box" @click.stop>
-      <button
-        :class="[styles.keyBoardLetters__buttonPagination, isAtMin() && styles.keyBoardLetters__buttonPaginationVisible]"
-        @click="() => {
-          const input = internalInputRef;
-          if (!input.value) return;
-          const current = parseInt(input.value.value) || 0;
-          const updated = Math.max(current - 1, 1);
-          if (updated !== current) {
-            input.value.value = String(updated);
-            internalValue.value = String(updated);
-            props.onInputChange?.(String(updated));
-            input.value.dispatchEvent(new Event('input', { bubbles: true }));
-          }
-        }">
-        <img src="/icons/VectorLeft.svg" alt="" />
-      </button>
-
-      <input ref="internalInputRef" :value="internalValue" @input="e => {
-        let val = parseInt((e.target as HTMLInputElement).value) || 1;
-        if (val < 1) val = 1;
-        if (props.maxValue && val > props.maxValue) val = props.maxValue;
-        const strVal = String(val);
-        internalValue.value = strVal;
-        props.onInputChange?.(strVal);
-      }" @click="updateCursor" @keyup="updateCursor" :class="styles.keyBoardLetters__keyboardInput" />
-
-      <button 
-        :class="[styles.keyBoardLetters__buttonPagination, isAtMax() && styles.keyBoardLetters__buttonPaginationVisible]"
-        @click="() => {
-          const input = internalInputRef;
-          if (!input.value) return;
-          const current = parseInt(input.value.value) || 0;
-          const updated = Math.min(current + 1, props.maxValue || Infinity);
-          if (updated !== current) {
-            input.value.value = String(updated);
-            internalValue.value = String(updated);
-            props.onInputChange?.(String(updated));
-            input.value.dispatchEvent(new Event('input', { bubbles: true }));
-          }
-        }">
-        <img src="/icons/VectorRight.svg" alt="" />
-      </button>
-    </div> -->
+  <div :class="[styles.keyBoardLetters, props.className]">
 
     <!-- Keyboard Layout -->
     <div @click.stop :class="[styles.keyBoardLetters__container, styles.keyBoardLetters__containerNumber]">
@@ -224,7 +187,7 @@ const isAtMax = () =>
     </div>
 
     <!-- Close Cross -->
-    <div @click="props.onVisable" :class="styles.keyBoardLetters__cross">
+    <div @click="onCloseButton" :class="styles.keyBoardLetters__cross">
       <Icon name="cross_keyboard" />
     </div>
   </div>
