@@ -68,11 +68,11 @@
     </div>
     <div class="center-2-bottom block">
       <div :style="{ position: 'relative', height: '100%' }">
-        <video v-if="data?.blockThreeMedia.video" :src="getServerImageUrl(data?.blockThreeMedia?.video)" autoplay muted
+        <video v-if="data?.blockThreeMedia.video" :src="getServerImageUrl(data?.blockThreeMedia?.video)" muted
           playsinline class="no-timeline" @click="togglePlay" @play="isPlaying = true" @pause="isPlaying = false"
           ref="videoRef">
         </video>
-        <button class="video-button" v-if="!isPlaying" @click="togglePlay">
+        <button v-if="data?.blockThreeMedia.video && !isPlaying" class="video-button" @click="togglePlay">
           <PlayIcon width="40px" />
         </button>
       </div>
@@ -417,6 +417,9 @@ header {
 
   img {
     // border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   display: grid;

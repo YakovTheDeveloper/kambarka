@@ -49,6 +49,7 @@ onMounted(async () => {
 
   .map {
     border-radius: 60px;
+    width: 100%;
   }
 }
 </style>

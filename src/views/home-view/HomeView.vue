@@ -38,6 +38,7 @@ const router = useRouter()
           <div class="image-box" :style="{
             background: `url(${getServerImageUrl(sections[3]?.image)}) center/cover no-repeat`,
             height: '804px',
+            borderRadius: '24px'
           }"></div>
           <div class="row">
             <h2 class="section-title section-title_small">

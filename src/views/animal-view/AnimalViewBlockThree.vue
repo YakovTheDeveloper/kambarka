@@ -1,7 +1,7 @@
 <template>
-  <div class="row" :style="{ gap: '30px' }" v-if="title">
-    <img :src="getServerImageUrl(props.img)" alt="" :style="{ width: '100px', height: '100px' }" />
-    <div>
+  <div class="row" :style="{ gap: '30px' }">
+    <img v-if="img" :src="getServerImageUrl(props.img)" alt="" :style="{ width: '100px', height: '100px' }" />
+    <div v-if="title">
       <p class="sub_s">{{ title }}</p>
       <p class="fz-20">{{ desc }}</p>
     </div>

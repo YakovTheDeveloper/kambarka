@@ -3,7 +3,7 @@
         styles.castomVideo,
         className,
         isFullscreen ? styles.fullscreen : ''
-    ]" ref="containerRef" @mousemove="showControlsTemporarily" :key="key">
+    ]" ref="containerRef" @mousemove="showControlsTemporarily">
         <div v-if="isFullscreen" :class="[styles.fullscreenHeader, showControls ? styles.visible : styles.hidden]">
             <span :class="styles.castomVideo__title">{{ title }}</span>
             <button @click="exitFullscreen" :class="styles.closeBtn">
@@ -85,8 +85,6 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
     (e: "modelActive", payload: { active: boolean }): void;
 }>();
-
-const key = ref('1')
 
 const videoRef = ref<HTMLVideoElement | null>(null);
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -235,11 +233,10 @@ onMounted(() => {
     }
 
     function handleEnded() {
-        const video = videoRef.value;
-        if (!video) return;
         isPlaying.value = false;
         isEnded.value = true;
         showControls.value = true;
+        cancelAnimationFrame(animationFrameId);
     }
 
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
