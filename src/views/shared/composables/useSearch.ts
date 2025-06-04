@@ -9,6 +9,7 @@ export function useSearch<T extends { [key: string]: any }>(data: T[], key = 'ti
         )
     );
 
+    const noData = computed(() => filtered.value.length === 0)
     const onChange = (value: string) => query.value = value
     const clear = () => query.value = ''
 
@@ -17,5 +18,6 @@ export function useSearch<T extends { [key: string]: any }>(data: T[], key = 'ti
         onChange,
         clear,
         filtered,
+        noData
     };
 }

@@ -4,7 +4,7 @@
       <Search :value="query" @change="onChange" @clear="clear" />
 
     </Header>
-    <div class="bg-alpha content">
+    <div :class="['bg-alpha', 'content', noData && 'content_no-data']">
       <CardList>
         <Card v-for="card in filtered" :img="card.image" :title="card.title" :key="card.id" category="redbook"
           :id="card.id" />
@@ -22,7 +22,7 @@ import { useSearch } from '@/views/shared/composables/useSearch'
 import Search from '@/views/shared/search/Search.vue'
 import { onMounted } from 'vue'
 const store = useRedBookStore()
-const { filtered, query, onChange, clear } = useSearch(store.data)
+const { filtered, query, onChange, clear, noData } = useSearch(store.data)
 const redbookStore = useRedBookStore()
 onMounted(() => {
   redbookStore.fetchAll()

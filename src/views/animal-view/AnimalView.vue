@@ -22,7 +22,9 @@
       </div>
     </div>
     <div class="center-1 block">
-      <div class="img"><img :src="getServerImageUrl(data?.image)" :style="{ borderRadius: '24px' }" alt="" /></div>
+      <div class="img">
+        <img :src="getServerImageUrl(data?.blockTwoMedia?.image1)" :style="{ borderRadius: '24px' }" alt="" />
+      </div>
       <div class="col" v-if="data?.blockTwo[0].field11Name">
         <p class="sub">{{ data?.blockTwo[0].field11Name }}</p>
         <p>
@@ -301,5 +303,13 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.container ::v-deep li {
+  list-style: initial;
+}
+
+.right ::v-deep li {
+  margin-bottom: 14px;
+}
+
 @import url('./styles.scss');
 </style>

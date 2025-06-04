@@ -3,7 +3,7 @@
     <Header title="Памятники природы">
       <Search :value="query" @change="onChange" @clear="clear" />
     </Header>
-    <div class="bg-alpha content">
+    <div :class="['bg-alpha', 'content', noData && 'content_no-data']">
       <CardList>
         <Card v-for="card in filtered" :img="card.image" :title="card.title" :key="card.id" category="monuments"
           :id="card.id" />
@@ -23,7 +23,7 @@ import { onMounted } from 'vue'
 
 const store = useMonumentStore()
 
-const { filtered, query, onChange, clear } = useSearch(store.data)
+const { filtered, query, onChange, clear, noData } = useSearch(store.data)
 
 onMounted(() => {
   store.fetchAll()

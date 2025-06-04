@@ -4,8 +4,8 @@
 
   let timerId
   const BODY = document.querySelector('body')
-  const PIN = 1234
-  const TIMER = 2000
+  const PIN = 1604
+  const TIMER = 15000
   const EXIT_URL = 'http://localhost:1702/'
   const BASE_BTN_CONFIG = {
     styles: {

@@ -49,7 +49,7 @@ onMounted(() => {
 
 <template>
   <RouterView />
-  <WaitingMode />
+  <!-- <WaitingMode /> -->
 </template>
 
 <style scoped></style>

@@ -1,7 +1,7 @@
 <template>
   <div class="container-bg container-padding">
     <Header title="Достопримечательности района"></Header>
-    <div class="bg-alpha content">
+    <div :class="['bg-alpha', 'content']">
       <Tabs :tabs="tabs" ref="tabsRef">
         <template #religion>
           <CardList>

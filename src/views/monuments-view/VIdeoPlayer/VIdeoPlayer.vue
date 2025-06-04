@@ -39,11 +39,18 @@
                     {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
                 </span>
             </div>
-
             <div :class="styles.btn2">
-                <div :class="styles.castomVideo__play_pause" @click="togglePlay">
-                    <img :src="isPlaying ? pausB_Svg : start_video_Svg" alt="Play/Pause" />
+                <div style="position: relative; display: inline-block;">
+                    <div @click="togglePlay"
+                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; cursor: pointer; z-index: 2; background: transparent;">
+                    </div>
+                    <div :class="styles.castomVideo__play_pause">
+                        <img :src="isPlaying ? pausB_Svg : start_video_Svg" alt="Play/Pause" />
+                    </div>
                 </div>
+                <!-- <div :class="styles.castomVideo__play_pause" style="pointer-events: none;">
+                    <img :src="isPlaying ? pausB_Svg : start_video_Svg" alt="Play/Pause" />
+                </div> -->
 
                 <div :class="styles.progressBarBox" @click="handleProgressClick">
                     <div :class="styles.progressBar">
