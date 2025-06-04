@@ -39,7 +39,7 @@ const countdownValue = ref(30)
 let interval: ReturnType<typeof setInterval> | null = null
 
 const startCountdown = () => {
-    countdownValue.value = 30
+    countdownValue.value = sleepingStore.config?.notificationSeconds || 30
     interval = setInterval(() => {
         countdownValue.value--
         if (countdownValue.value <= 0) {
@@ -69,6 +69,16 @@ watch(isVisible, (newVal) => {
         clearCountdown()
     }
 })
+
+watch(sleepingStore.config, (config) => {
+    if (config) {
+
+    } else {
+
+    }
+})
+
+
 
 onUnmounted(() => {
     clearCountdown()

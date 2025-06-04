@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header class="block row" :style="{ alignItems: 'center', gap: '40px' }">
-      <BackButton to="/habitat" />
+      <BackButton :to="backButtonLink" />
       <p>{{ data?.title }}</p>
     </header>
     <div class="left block">
@@ -125,12 +125,6 @@
           {{ data?.blockFive[0]?.field24Description }}
         </p>
       </div>
-      <div class="col" :style="{ margin: '0 0 20px' }">
-        <p class="sub_s">{{ data?.blockFive[0]?.field24Name }}</p>
-        <p>
-          {{ data?.blockFive[0]?.field24Description }}
-        </p>
-      </div>
 
       <div :style="{ height: '20px' }"></div>
 
@@ -240,7 +234,7 @@
 <script setup lang="ts">
 import { useHabitatData } from '@/stores/habitatStore'
 import { computed, onMounted, watchEffect, ref, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import AnimalViewBlockOne from './AnimalViewBlockOne.vue'
 import AnimalViewBlockOne2 from './AnimalViewBlockOne2.vue'
 import BackButtonIcon from '@/components/BackButtonIcon.vue'
@@ -252,11 +246,13 @@ import PlaySoundIcon from '@/components/icons/PlaySoundIcon.vue'
 import BackButton from '@/components/back-button/BackButton.vue'
 
 const router = useRouter()
+const route = useRoute()
 const store = useHabitatData()
 const audioRef = ref(null)
 const audioRef2 = ref(null)
 const data = computed(() => store.getById(+router.currentRoute.value.params.id))
 
+const backButtonLink = `/habitat/?type=${route.query.type}`
 
 const toggleAudio = (which) => {
   let audio
@@ -419,7 +415,7 @@ header {
     // border-radius: 50%;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
   }
 
   display: grid;

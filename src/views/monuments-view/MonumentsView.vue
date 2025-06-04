@@ -19,10 +19,17 @@ import Header from '@/views/shared/header/Header.vue'
 import { useMonumentStore } from '@/stores/memorialStore'
 import Search from '@/views/shared/search/Search.vue'
 import { useSearch } from '@/views/shared/composables/useSearch'
+import { onMounted } from 'vue'
 
 const store = useMonumentStore()
 
 const { filtered, query, onChange, clear } = useSearch(store.data)
+
+onMounted(() => {
+  store.fetchAll()
+})
+
+
 </script>
 
 <style scoped lang="scss">

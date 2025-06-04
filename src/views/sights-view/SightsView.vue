@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Header from '../shared/header/Header.vue'
 import Card from '@/components/card/Card.vue'
 import Tabs from '@/components/tabs/Tabs.vue'
@@ -44,6 +44,9 @@ const tabs = [
 
 const store = useSightStore()
 
+onMounted(() => {
+  store.fetchAll()
+})
 
 </script>
 

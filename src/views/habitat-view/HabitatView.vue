@@ -6,7 +6,7 @@
     <div class="bg-alpha content">
       <CardList>
         <Card v-for="card in filtered" :img="card.image" :title="card.title" category="habitat"
-          @click="onCardClick(card.id)" :id="card.id" :key="card.id" />
+          :router-postfix="routerPostfix" @click="onCardClick(card.id)" :id="card.id" :key="card.id" />
       </CardList>
     </div>
   </div>
@@ -22,6 +22,18 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 const store = useHabitatData()
+
+const routerPostfix = `?type=${route.query.type}
+`
+
+const habitatStore = useHabitatData()
+
+
+
+onMounted(() => {
+  habitatStore.fetchData()
+})
+
 
 
 const title = computed(() => {
@@ -54,7 +66,7 @@ const data = computed(() => {
 const { filtered, query, onChange, clear } = useSearch(data.value)
 
 const onCardClick = (id: number) => {
-  router.push(`/habitat/${id}`)
+  router.push(`/habitat/${id}?type=${route.query.type}`)
 }
 
 import { ref } from 'vue'

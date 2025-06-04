@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import type { Habitat } from './types'
 
-export const useHabitatData = defineStore('data', () => {
+export const useHabitatData = defineStore('habitat-data', () => {
   const data = ref<Array<{ id: number; title: string; type: string; image: string }>>([])
 
   const habitatsMap = ref<Record<string, Habitat>>({})

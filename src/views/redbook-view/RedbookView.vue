@@ -20,8 +20,13 @@ import CardList from '@/components/card/CardList.vue'
 import { useRedBookStore } from '@/stores/redbookStore'
 import { useSearch } from '@/views/shared/composables/useSearch'
 import Search from '@/views/shared/search/Search.vue'
+import { onMounted } from 'vue'
 const store = useRedBookStore()
 const { filtered, query, onChange, clear } = useSearch(store.data)
+const redbookStore = useRedBookStore()
+onMounted(() => {
+  redbookStore.fetchAll()
+})
 
 </script>
 

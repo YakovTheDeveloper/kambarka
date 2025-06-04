@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="card"
-    @click="onClick"
-    :style="{
-      background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${getServerImageUrl($props.img)}') right/cover no-repeat`,
-    }"
-  >
+  <div class="card" @click="onClick" :style="{
+    background: `linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.8) 100%), url('${getServerImageUrl($props.img)}') right/cover no-repeat`,
+  }">
     <div class="card-title" v-nbsp>{{ $props.title }}</div>
   </div>
 </template>
@@ -21,8 +17,9 @@ const props = defineProps<{
   title: string
   id: string | number
   category: string
+  routerPostfix?: string
 }>()
-const onClick = () => props.category && router.push(props.category + '/' + props.id)
+const onClick = () => props.category && router.push(props.category + '/' + props.id + (props.routerPostfix ? props.routerPostfix : ''))
 </script>
 
 <style scoped lang="scss">
