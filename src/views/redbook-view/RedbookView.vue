@@ -20,13 +20,12 @@ import CardList from '@/components/card/CardList.vue'
 import { useRedBookStore } from '@/stores/redbookStore'
 import { useSearch } from '@/views/shared/composables/useSearch'
 import Search from '@/views/shared/search/Search.vue'
+import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
-const store = useRedBookStore()
+const { fetchAll } = useRedBookStore()
+const store = storeToRefs(useRedBookStore())
 const { filtered, query, onChange, clear, noData } = useSearch(store.data)
-const redbookStore = useRedBookStore()
-onMounted(() => {
-  redbookStore.fetchAll()
-})
+onMounted(() => fetchAll())
 
 </script>
 

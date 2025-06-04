@@ -42,11 +42,14 @@ onMounted(() => {
 const cards = computed(() => {
   const initCards = store.memoryDifficultyToImages[difficultyStore.difficulty.value]?.memoryImages
   if (!initCards) return []
+  // Make a copy of the array and double the cards
   const doubled = initCards.flatMap((el, idx) => [
     { id: `${idx * 2 + 1}`, image: el.image },
     { id: `${idx * 2 + 2}`, image: el.image },
   ])
-  return doubled
+  // Shuffle the doubled array in random order
+  const shuffled = [...doubled].sort(() => Math.random() - 0.5)
+  return shuffled
 })
 
 const headerSpace = computed(() => {

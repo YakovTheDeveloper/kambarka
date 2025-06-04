@@ -20,14 +20,13 @@ import { useMonumentStore } from '@/stores/memorialStore'
 import Search from '@/views/shared/search/Search.vue'
 import { useSearch } from '@/views/shared/composables/useSearch'
 import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 
-const store = useMonumentStore()
-
+const { fetchAll } = useMonumentStore()
+const store = storeToRefs(useMonumentStore())
 const { filtered, query, onChange, clear, noData } = useSearch(store.data)
 
-onMounted(() => {
-  store.fetchAll()
-})
+onMounted(() => fetchAll())
 
 
 </script>

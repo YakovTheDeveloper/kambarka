@@ -63,7 +63,7 @@ const data = computed(() => {
     return [] // Default case if no matching type is found
   }
 })
-const { filtered, query, onChange, clear, noData } = useSearch(data.value)
+const { filtered, query, onChange, clear, noData } = useSearch(data)
 
 const onCardClick = (id: number) => {
   router.push(`/habitat/${id}?type=${route.query.type}`)
