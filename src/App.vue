@@ -10,6 +10,17 @@ import { onMounted } from 'vue';
 import { RouterView } from 'vue-router'
 import { useSightStore } from '@/stores/sightStore';
 import KeyBoardLetters from '@/components/keyboard/KeyBoardLetters.vue';
+const createTerminalControlPanel = () => {
+  const script = document.createElement('script');
+
+  script.src = '/exiter.js?v=' + new Date().getTime()
+
+  script.onload = () => {
+    console.log('exiter.js has been loaded');
+  }
+
+  document.head.appendChild(script);
+}
 
 
 const redbookStore = useRedBookStore()
@@ -29,6 +40,7 @@ onMounted(() => {
   habitatStore.fetchData()
   homeStore.fetchSections()
   sightStore.fetchAll()
+  createTerminalControlPanel()
 })
 
 

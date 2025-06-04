@@ -1,5 +1,5 @@
 <template>
-  <div class="gallery">
+  <div :class="galleryClasses">
     <swiper :modules="modules" :pagination="true" :navigation="{
       nextEl: nextElRef,
       prevEl: prevElRef,
@@ -32,7 +32,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import { ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import ArrowLeftIcon from '../icons/ArrowLeftIcon.vue'
 import ArrowRightIcon from '../icons/ArrowRightIcon.vue'
 import { getServerImageUrl } from '@/utils/getServerImageUrl'
@@ -41,6 +41,8 @@ const props = defineProps<{
   photos: { id: number; image: string }[]
   title: string
 }>()
+
+const galleryClasses = computed(() => props.photos.length > 1 ? 'gallery' : 'gallery no-pagination')
 
 const prevElRef = ref<HTMLElement | null>(null)
 const nextElRef = ref<HTMLElement | null>(null)
@@ -55,6 +57,11 @@ function onSlideChange(swiper: any) {
 
 <style scoped lang="scss">
 ::v-deep(.swiper-pagination) {
+
+  .no-pagination & {
+    display: none;
+  }
+
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 36px;
   padding: 24px;

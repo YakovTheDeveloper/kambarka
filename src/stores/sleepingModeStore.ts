@@ -1,10 +1,11 @@
 // composables/useInactivityTimer.ts
-import { onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, onUnmounted, watch, watchEffect } from 'vue'
 
 // stores/sleepingModeStore.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
+import { useRoute } from 'vue-router'
 
 export const useSleepingModeStore = defineStore('sleepingMode', () => {
   const isVisible = ref(false)
@@ -32,7 +33,11 @@ export const useSleepingModeStore = defineStore('sleepingMode', () => {
           accept: 'application/json',
         },
       })
-      config.value = response.data
+      config.value = response.data || {
+        "id": -1,
+        "sleepModeSeconds": 1,
+        "notificationSeconds": 1
+      }
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -48,6 +53,8 @@ export const useSleepingModeStore = defineStore('sleepingMode', () => {
 export function useInactivityTimer() {
   const sleepingStore = useSleepingModeStore()
   let timer: ReturnType<typeof setTimeout>
+
+  const route = useRoute()
 
   const reset = (timeout: number) => {
     clearTimeout(timer)
@@ -75,6 +82,19 @@ export function useInactivityTimer() {
       },
       { immediate: true }
     )
+  })
+
+  watchEffect((onCleanup) => {
+    let intervalId: ReturnType<typeof setInterval> | null = null
+    if (route.path === '/') {
+      intervalId = setInterval(() => {
+        console.log("Handle activity");
+        handleActivity()
+      }, 1000)
+    }
+    onCleanup(() => {
+      if (intervalId) clearInterval(intervalId)
+    })
   })
 
   onUnmounted(() => {

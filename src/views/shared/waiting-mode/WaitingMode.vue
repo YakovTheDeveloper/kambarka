@@ -88,7 +88,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .waiting-modal {
-    position: fixed;
+    position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.7);
     z-index: 1000;

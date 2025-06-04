@@ -3,14 +3,15 @@
   line-height: 130%;
 }
 
+.radius {
+  border-radius: 24px;
+}
+
 .grid-row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-img {
-  // background-color: red;
-}
 
 .container {
   font-weight: 500;
@@ -22,6 +23,11 @@ img {
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: anywhere;
+
+  img {
+    object-fit: cover;
+  }
+
 }
 
 .sub {
@@ -104,6 +110,13 @@ header {
   left: 700px;
   bottom: 80px;
 
+  img {
+    // border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -119,6 +132,47 @@ header {
   height: 580px;
   left: 1630px;
   bottom: 80px;
+
+  .video-button {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    height: 100px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(87, 155, 59, 1);
+    border-radius: 50%;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    touch-action: manipulation;
+
+    &.no-timeline::-webkit-media-controls-panel {
+      background: transparent !important;
+      /* Remove gradient */
+    }
+
+    &.no-timeline::-webkit-media-controls-timeline {
+      display: none !important;
+    }
+
+    &.no-timeline::-webkit-media-controls-current-time-display,
+    &.no-timeline::-webkit-media-controls-time-remaining-display {
+      display: none !important;
+    }
+
+    &.no-timeline::-webkit-media-controls-play-button {
+      filter: invert(1);
+      /* optional: make play button visible if needed */
+    }
+  }
 }
 
 .right {
@@ -126,6 +180,8 @@ header {
   height: 1690px;
   left: 2870px;
   bottom: 80px;
+  flex-direction: column;
+  display: flex;
 }
 
 .right-top {
@@ -140,4 +196,18 @@ header {
   height: 1690px;
   left: 2250px;
   bottom: 80px;
+}
+
+video {
+  object-fit: cover;
+}
+
+/* Chrome-based browsers only */
+video.no-timeline::-webkit-media-controls-timeline {
+  display: none;
+}
+
+/* Firefox - very limited control */
+video.no-timeline::-moz-media-controls {
+  display: none;
 }
