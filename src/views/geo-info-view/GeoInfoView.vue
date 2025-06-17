@@ -2,8 +2,10 @@
   <div class="container-bg-blur container-padding">
     <Header :has-back-button="true" title="Географическая справка" />
     <div class="content">
-      <img :src="getServerImageUrl(geographyData?.image)" alt="" class="map" :draggable="false" />
-      <div v-html="fixOrphanWordsInHTML(geographyData?.description)"></div>
+      <div class="map">
+        <img :src="getServerImageUrl(geographyData?.image)" alt="" :draggable="false" />
+      </div>
+      <div class="content-text" v-html="fixOrphanWordsInHTML(geographyData?.description)"></div>
     </div>
   </div>
 </template>
@@ -43,13 +45,27 @@ onMounted(async () => {
   line-height: 100%;
   color: #ffffff;
 
-  img {
-    user-select: none;
+  &-text {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
   }
 
   .map {
     border-radius: 60px;
     width: 100%;
+
+    img {
+      user-select: none;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 60px;
+    }
+  }
+
+  ::v-deep li {
+    list-style-type: disc;
+    margin-left: 1.5em;
   }
 }
 </style>

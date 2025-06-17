@@ -153,7 +153,7 @@ export const pos = [
   },
   {
     x: 1276,
-    y: 328,
+    y: 330,
     backgroundPosition: '-230px 0px',
   },
   {
@@ -163,12 +163,12 @@ export const pos = [
   },
   {
     x: 1856,
-    y: 327,
+    y: 329,
     backgroundPosition: '-815px 0px',
   },
   {
     x: 2206,
-    y: 326,
+    y: 329,
     backgroundPosition: '-1160px 0px',
   },
   {
