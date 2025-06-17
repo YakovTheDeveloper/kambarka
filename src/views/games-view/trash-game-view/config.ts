@@ -160,12 +160,12 @@ const secondLevelTrashBins = [
 ]
 
 const thirdLevelTrashBins = [
-  { src: '/images/games/trash/trash-bins/paper', x: 0, y: 1150, type: 'paper' },
-  { src: '/images/games/trash/trash-bins/plastic', x: 640, y: 1150, type: 'plastic' },
-  { src: '/images/games/trash/trash-bins/metal', x: 1280, y: 1150, type: 'metal' },
-  { src: '/images/games/trash/trash-bins/org', x: 1920, y: 1150, type: 'org' },
-  { src: '/images/games/trash/trash-bins/accum', x: 2560, y: 1150, type: 'accum' },
-  { src: '/images/games/trash/trash-bins/glass', x: 3200, y: 1150, type: 'glass' },
+  { src: '/images/games/trash/trash-bins/paper', x: -60, y: 1150, type: 'paper' },
+  { src: '/images/games/trash/trash-bins/plastic', x: 580, y: 1150, type: 'plastic' },
+  { src: '/images/games/trash/trash-bins/metal', x: 1220, y: 1150, type: 'metal' },
+  { src: '/images/games/trash/trash-bins/org', x: 1860, y: 1150, type: 'org' },
+  { src: '/images/games/trash/trash-bins/accum', x: 2500, y: 1150, type: 'accum' },
+  { src: '/images/games/trash/trash-bins/glass', x: 3140, y: 1150, type: 'glass' },
 ]
 
 export const levelToBins: Record<number, { src: string; x: number; y: number; type: string }[]> = {

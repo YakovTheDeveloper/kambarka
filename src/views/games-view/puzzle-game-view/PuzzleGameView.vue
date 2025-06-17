@@ -5,39 +5,73 @@
     <div class="row">
       <div class="puzzle-pieces"></div>
 
-      <div class="puzzle-frame" :style="{
-        // backgroundImage: `url('/images/games/puzzle/frame.png')`,
-        // backgroundSize: 'cover',
-        // backgroundPosition: 'center',
-      }">
+      <div
+        class="puzzle-frame"
+        :style="{
+          // backgroundImage: `url('/images/games/puzzle/frame.png')`,
+          // backgroundSize: 'cover',
+          // backgroundPosition: 'center',
+        }"
+      >
         <img :src="gridImage" alt="" class="puzzle-grid" :draggable="false" />
-        <img :src="baseImage" alt="" class="puzzle-image" :draggable="false" ref="puzzleImageRef"
-          @click="handleClick" />
+        <img
+          :src="baseImage"
+          alt=""
+          class="puzzle-image"
+          :draggable="false"
+          ref="puzzleImageRef"
+          @click="handleClick"
+        />
       </div>
       <div class="puzzle-pieces">
         <template v-for="(piece, index) in pieces" :key="index">
-          <span v-if="piece.show" :id="getGridItemId(piece.row, piece.col)" :style="{
-            position: 'absolute',
-            zIndex: 2,
-            transform: `translate(${piece.x}px, ${piece.y}px)`,
-          }" @touchstart.prevent="startDrag(index, $event)" @touchmove.prevent="onDrag($event)"
-            @touchend.prevent="endDrag" @mousedown.prevent="startDrag(index, $event)"
-            @mousemove.prevent="onDrag($event)" @mouseup.prevent="endDrag">
-            <PuzzlePiece :backgroundPosition="piece.backgroundPosition" :key="index" :row="piece.row" :col="piece.col"
-              :size="pieceSize" :imageUrl="baseImage" :gridSize="gridSize" :shapeIndex="index + 1" />
+          <span
+            v-if="piece.show"
+            :id="getGridItemId(piece.row, piece.col)"
+            :style="{
+              position: 'absolute',
+              zIndex: 2,
+              transform: `translate(${piece.x}px, ${piece.y}px)`,
+            }"
+            @touchstart.prevent="startDrag(index, $event)"
+            @touchmove.prevent="onDrag($event)"
+            @touchend.prevent="endDrag"
+            @mousedown.prevent="startDrag(index, $event)"
+            @mousemove.prevent="onDrag($event)"
+            @mouseup.prevent="endDrag"
+          >
+            <PuzzlePiece
+              :backgroundPosition="piece.backgroundPosition"
+              :key="index"
+              :row="piece.row"
+              :col="piece.col"
+              :size="pieceSize"
+              :imageUrl="baseImage"
+              :gridSize="gridSize"
+              :shapeIndex="index + 1"
+            />
           </span>
         </template>
       </div>
       <template v-for="(piece, index) in pieces" :key="index">
-        <span :style="{
-          left: `${pos[index].x}px`,
-          top: `${pos[index].y}px`,
-          position: 'absolute',
-          zIndex: 2,
-          display: puzzlesIds.includes(getGridItemId(piece.row, piece.col)) ? 'block' : 'none',
-        }">
-          <PuzzlePiece :backgroundPosition="piece.backgroundPosition" :key="index" :row="piece.row" :col="piece.col"
-            :imageUrl="baseImage" :gridSize="gridSize" :shapeIndex="index + 1" />
+        <span
+          :style="{
+            left: `${pos[index].x}px`,
+            top: `${pos[index].y}px`,
+            position: 'absolute',
+            zIndex: 2,
+            display: puzzlesIds.includes(getGridItemId(piece.row, piece.col)) ? 'block' : 'block',
+          }"
+        >
+          <PuzzlePiece
+            :backgroundPosition="piece.backgroundPosition"
+            :key="index"
+            :row="piece.row"
+            :col="piece.col"
+            :imageUrl="baseImage"
+            :gridSize="gridSize"
+            :shapeIndex="index + 1"
+          />
         </span>
       </template>
     </div>
@@ -120,7 +154,6 @@ const removePuzzleFromUserCollection = (draggingIndex: Ref<number>) => {
 }
 
 watchEffect(() => {
-
   if (Object.keys(puzzlesToOpen.value).length === pieces.value.length) {
     router.push(`/games/puzzle/finish?difficulty=${difficulty.difficulty.value}`)
   }
@@ -186,6 +219,7 @@ const { endDrag, onDrag, startDrag } = useMovable({
     opacity: 0.25;
     padding: 40px;
     user-select: none;
+    object-fit: cover;
   }
 
   .puzzle-grid {

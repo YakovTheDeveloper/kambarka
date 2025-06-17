@@ -1,9 +1,15 @@
 <template>
   <div :class="galleryClasses">
-    <swiper :modules="modules" :pagination="true" :navigation="{
-      nextEl: nextElRef,
-      prevEl: prevElRef,
-    }" class="swiper-main" @slideChange="onSlideChange">
+    <swiper
+      :modules="modules"
+      :pagination="true"
+      :navigation="{
+        nextEl: nextElRef,
+        prevEl: prevElRef,
+      }"
+      class="swiper-main"
+      @slideChange="onSlideChange"
+    >
       <swiper-slide v-for="{ id, image } in props.photos" :key="id" class="swiper-main-item">
         <img :src="getServerImageUrl(image)" class="swiper-main-item-bg" />
         <img :src="getServerImageUrl(image)" class="swiper-main-item-img" />
@@ -42,7 +48,9 @@ const props = defineProps<{
   title: string
 }>()
 
-const galleryClasses = computed(() => props.photos.length > 1 ? 'gallery' : 'gallery no-pagination')
+const galleryClasses = computed(() =>
+  props.photos.length > 1 ? 'gallery' : 'gallery no-pagination',
+)
 
 const prevElRef = ref<HTMLElement | null>(null)
 const nextElRef = ref<HTMLElement | null>(null)
@@ -57,7 +65,6 @@ function onSlideChange(swiper: any) {
 
 <style scoped lang="scss">
 ::v-deep(.swiper-pagination) {
-
   .no-pagination & {
     display: none;
   }

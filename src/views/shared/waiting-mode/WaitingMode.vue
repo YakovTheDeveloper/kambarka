@@ -47,7 +47,7 @@ const countdownValue = ref(30)
 let interval: ReturnType<typeof setInterval> | null = null
 
 const startCountdown = () => {
-  countdownValue.value = sleepingStore.config?.notificationSeconds || 30
+  countdownValue.value = sleepingStore.config?.sleepModeSeconds || 30
   interval = setInterval(() => {
     countdownValue.value--
     if (countdownValue.value <= 0) {

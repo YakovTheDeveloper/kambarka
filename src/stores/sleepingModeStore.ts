@@ -10,13 +10,13 @@ import { useRoute } from 'vue-router'
 export const useSleepingModeStore = defineStore('sleepingMode', () => {
   const isVisible = ref(false)
   const config = ref<{
-    "id": number,
-    "sleepModeSeconds": number,
-    "notificationSeconds": number
+    id: number
+    sleepModeSeconds: number
+    notificationSeconds: number
   }>({
-    "id": -1,
-    "sleepModeSeconds": 1,
-    "notificationSeconds": 1
+    id: -1,
+    sleepModeSeconds: 1,
+    notificationSeconds: 1,
   })
 
   const show = () => {
@@ -34,16 +34,15 @@ export const useSleepingModeStore = defineStore('sleepingMode', () => {
         },
       })
       config.value = response.data || {
-        "id": -1,
-        "sleepModeSeconds": 1,
-        "notificationSeconds": 1
+        id: -1,
+        sleepModeSeconds: 1,
+        notificationSeconds: 1,
       }
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
   fetchData()
-
 
   useInactivityTimer()
 
@@ -53,7 +52,7 @@ export const useSleepingModeStore = defineStore('sleepingMode', () => {
 export function useInactivityTimer() {
   const sleepingStore = useSleepingModeStore()
   let timer: ReturnType<typeof setTimeout>
-
+  let videoCheckInterval: ReturnType<typeof setInterval>
   const route = useRoute()
 
   const reset = (timeout: number) => {
@@ -71,6 +70,19 @@ export function useInactivityTimer() {
     reset(sleepingStore.config.notificationSeconds * 1000)
   }
 
+  const createVideoPlayingCheckInterval = () =>
+    setInterval(() => {
+      const video = document.getElementById('video')
+      if (!video) return
+      const isPlaying = video.getAttribute('data-playing') === 'true'
+      isPlaying && handleActivity()
+      isPlaying && console.log('handleActivity')
+    }, 3000) // 1000 ms = 1 second
+
+  onMounted(() => {
+    videoCheckInterval = createVideoPlayingCheckInterval()
+  })
+
   onMounted(() => {
     activityEvents.forEach((evt) => window.addEventListener(evt, handleActivity, { passive: true }))
 
@@ -80,7 +92,7 @@ export function useInactivityTimer() {
       (newTimeout) => {
         reset(newTimeout * 1000)
       },
-      { immediate: true }
+      { immediate: true },
     )
   })
 
@@ -88,7 +100,7 @@ export function useInactivityTimer() {
     let intervalId: ReturnType<typeof setInterval> | null = null
     if (route.path === '/') {
       intervalId = setInterval(() => {
-        console.log("Handle activity");
+        console.log('Handle activity')
         handleActivity()
       }, 1000)
     }
@@ -100,5 +112,6 @@ export function useInactivityTimer() {
   onUnmounted(() => {
     activityEvents.forEach((evt) => window.removeEventListener(evt, handleActivity))
     clearTimeout(timer)
+    clearInterval(videoCheckInterval)
   })
 }
