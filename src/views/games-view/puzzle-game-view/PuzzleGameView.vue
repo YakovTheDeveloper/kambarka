@@ -60,7 +60,7 @@
             top: `${pos[index].y}px`,
             position: 'absolute',
             zIndex: 2,
-            display: puzzlesIds.includes(getGridItemId(piece.row, piece.col)) ? 'block' : 'block',
+            display: puzzlesIds.includes(getGridItemId(piece.row, piece.col)) ? 'block' : 'none',
           }"
         >
           <PuzzlePiece

@@ -79,7 +79,10 @@
 
         <div :class="styles.progressBarBox" @click="handleProgressClick">
           <div :class="styles.progressBar">
-            <div :class="styles.progress" :style="{ width: progressPercent + '%' }" />
+            <div
+              :class="[styles.progress, currentTime > 0 && styles.transition]"
+              :style="{ width: progressPercent + '%' }"
+            />
           </div>
         </div>
 
@@ -240,11 +243,30 @@ function getVolumeIcon() {
   return Volume
 }
 
+// function onVideoClick() {
+//   if (isEnded.value) {
+//     isEnded.value = false
+//   }
+//   if (isFullscreen.value) showControlsTemporarily()
+//   togglePlay()
+// }
 function onVideoClick() {
+  const video = videoRef.value
+  if (!video) return
+
+  if (isEnded.value) {
+    video.currentTime = 0
+    currentTime.value = 0
+    isEnded.value = false
+    video.play()
+    isPlaying.value = true
+    showControlsTemporarily()
+    return
+  }
+
   if (isFullscreen.value) showControlsTemporarily()
   togglePlay()
 }
-
 onMounted(() => {
   const video = videoRef.value
   if (!video) return
