@@ -153,6 +153,15 @@ function togglePlay() {
   const video = videoRef.value
   if (!video) return
 
+  if (isEnded.value && video.paused) {
+    video.currentTime = 0
+    currentTime.value = 0
+    isEnded.value = false
+    video.play()
+    isPlaying.value = true
+    return
+  }
+
   if (video.paused) {
     video.play()
     isPlaying.value = true
