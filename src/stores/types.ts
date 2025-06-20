@@ -238,11 +238,16 @@ export type Sight = {
   id: number
   title: string
   type: string
+  place: string
   name: string
   simpleName: string
   status: string
   history: string
   nowadays: string
+  landmarkRegionPlaceImages: {
+    id: number
+    image: string
+  }[]
   image: {
     id: number
     image: string
